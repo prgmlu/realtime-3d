@@ -1,0 +1,2 @@
+export const SET_MODAL_PROPS = 'SET_MODAL_PROPS';
+export const SET_MODAL_VISIBILITY = 'SET_MODAL';

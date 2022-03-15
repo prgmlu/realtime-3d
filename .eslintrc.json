@@ -1,0 +1,32 @@
+{
+	"env": {
+		"browser": true,
+		"es2021": true
+	},
+	"extends": ["eslint:recommended", "plugin:react/recommended", "airbnb", "prettier"],
+	"parser": "@babel/eslint-parser",
+	"parserOptions": {
+		"ecmaFeatures": {
+			"jsx": true
+		},
+		"ecmaVersion": 12,
+		"sourceType": "module"
+	},
+	"plugins": ["react"],
+	"rules": {
+		// Disabled indentation here. Indentation is controlled through prettier
+		"indent": "off",
+		"no-tabs": "off",
+		"react/function-component-definition": [
+			1,
+			{
+				"namedComponents": "arrow-function"
+			}
+		],
+		"react/forbid-prop-types": "off",
+		"no-underscore-dangle": "off",
+		"react/jsx-props-no-spreading": "off",
+		"import/no-unresolved": "off",
+		"react/no-array-index-key": "off"
+	}
+}
