@@ -6,27 +6,6 @@ import CharacterControls from './characterControls';
 import mainChar from './static/glb_files/Soldier.glb'
 import {items, putItems} from './items'
 
-var moveForward = false;
-var moveBackward = false;
-var moveLeft = false;
-var moveRight = false;
-
-var prevTime = performance.now();
-const velocity = new THREE.Vector3();
-const direction = new THREE.Vector3();
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
-var objectIntersected = false;
-const lastCharPos = new THREE.Vector3();
-const camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
-
-const initCharacter = () => {
-	const geometry = new THREE.SphereGeometry(.25, 32, 16);
-	const material = new THREE.MeshBasicMaterial({color:'red'});
-	const mainChar = new THREE.Mesh(geometry, material);
-	mainChar.position.set(0, 0.25, 0);
-	return mainChar
-}
 
 export default class Store extends Component {
 
@@ -81,34 +60,19 @@ export default class Store extends Component {
 		});
 
 		// CONTROL KEYS
-		let keysPressed = {}
+		let keysPressed = {};
 		document.addEventListener('keydown', (e) => {
-			if (e.shiftKey && characterControls) {
-				characterControls.switchRunToggle()
-			} else {
-				(keysPressed)[e.key.toLowerCase()] = true
-			}
+			(keysPressed)[e.key.toLowerCase()] = true
 		}, false);
 		document.addEventListener('keyup', (e) => {
 			(keysPressed)[e.key.toLowerCase()] = false
 		}, false);
 
-		putItems(scene, loader, items)
+		putItems(scene, loader, items);
 
 		const clock = new THREE.Clock();
 
 		function animate() {
-
-				// raycaster.ray.origin.copy( controls.getObject().position );
-				raycaster.setFromCamera(mouse, camera);
-				// // calculate objects intersecting the picking ray
-				// const intersects = raycaster.intersectObjects( [sphere, window.tShirt] );
-				// if ( intersects && intersects.length > 0) {
-				//   objectIntersected = true;
-				// }
-				// else{
-				//   objectIntersected = false;
-				// }
 
 			let mixerUpdateDelta = clock.getDelta();
 			if (characterControls.update) {

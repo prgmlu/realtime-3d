@@ -1,7 +1,5 @@
-import { string } from 'prop-types';
-import React, { Component } from 'react'
+import { Component } from 'react'
 import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 
 // CONSTANTS
@@ -12,7 +10,7 @@ const DIRECTIONS = ['w', 'a', 's', 'd'];
 
 export default class CharacterControls extends Component {
 
-    constructor(model, mixer, animationsMap, orbitControl, camera, currentAction = ''){
+    constructor(model, mixer, animationsMap, orbitControl, camera, currentAction = 'Idle'){
 
         super()
         this.model = model
@@ -37,20 +35,16 @@ export default class CharacterControls extends Component {
         this.currentAction = currentAction;
     }
 
-    switchRunToggle(){
-        this.toggleRun = !this.toggleRun
-    }
-
     update(delta, keysPressed){
 
-        const directionPressed = DIRECTIONS.some(key => keysPressed[key] == true)
+        const directionPressed = DIRECTIONS.some(key => keysPressed[key] == true);
 
-        var play = '';
-        if (directionPressed && this.toggleRun) {
-            play = 'Run'
-        } else if (directionPressed) {
+        let play = '';
+
+        if (directionPressed) {
             play = 'Walk'
-        } else {
+        }
+        else {
             play = 'Idle'
         }
 
@@ -66,7 +60,7 @@ export default class CharacterControls extends Component {
 
         this.mixer.update(delta)
 
-        if (this.currentAction == 'Run' || this.currentAction == 'Walk') {
+        if (this.currentAction == 'Walk') {
             // calculate towards camera direction
             var angleYCameraDirection = Math.atan2(
                     (this.camera.position.x - this.model.position.x), 
@@ -85,7 +79,7 @@ export default class CharacterControls extends Component {
             this.walkDirection.applyAxisAngle(this.rotateAngle, directionOffset)
 
             // run/walk velocity
-            const velocity = this.currentAction == 'Run' ? runVelocity : walkVelocity
+            const velocity = walkVelocity
 
             // move model & camera
             const moveX = this.walkDirection.x * velocity * delta
