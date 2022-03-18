@@ -6,6 +6,14 @@ import CharacterControls from './characterControls';
 import mainChar from './static/glb_files/Soldier.glb'
 import {items, putItems} from './items'
 
+const createBoundingObj = (position) => {
+    const objGeometry = new THREE.CylinderGeometry( 1, 1);
+    const objMaterial = new THREE.MeshBasicMaterial({transparent:true, opacity:0});
+    const boundingObj = new THREE.Mesh(objGeometry, objMaterial);
+	boundingObj.position.set(position.x, position.y, position.z);
+    return boundingObj
+}
+
 
 export default class Store extends Component {
 
@@ -47,25 +55,28 @@ export default class Store extends Component {
 				if (object.isMesh) object.castShadow = true;
 			});
 
+			let objPos = {x:model.position.x, y:1, z:model.position.z};
+			model.boundingObj = createBoundingObj(objPos);
+
 			scene.add(model);
+			scene.add(model.boundingObj);
 
 			const charAnimations = data.animations;
 			const mixer = new THREE.AnimationMixer(model);
-			const animationsMap = new Map()
+			const animationsMap = new Map();
 			charAnimations.filter(a => a.name != 'TPose').forEach((a) => {
-				animationsMap.set(a.name, mixer.clipAction(a))
+				animationsMap.set(a.name, mixer.clipAction(a));
 			})
-
-			characterControls = new CharacterControls(model, mixer, animationsMap, orbitControls, camera,  'Idle');
+			characterControls = new CharacterControls(model, mixer, animationsMap, orbitControls, camera, 'Idle');
 		});
 
 		// CONTROL KEYS
 		let keysPressed = {};
 		document.addEventListener('keydown', (e) => {
-			(keysPressed)[e.key.toLowerCase()] = true
+			(keysPressed)[e.key.toLowerCase()] = true;
 		}, false);
 		document.addEventListener('keyup', (e) => {
-			(keysPressed)[e.key.toLowerCase()] = false
+			(keysPressed)[e.key.toLowerCase()] = false;
 		}, false);
 
 		putItems(scene, loader, items);

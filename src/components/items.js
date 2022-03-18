@@ -5,6 +5,10 @@ import smallBag from './static/glb_files/small_bag.glb'
 import smallBag2 from './static/glb_files/small_bag_2.glb'
 import bag from './static/glb_files/bag.glb'
 
+
+window.sceneObjects = [];
+
+
 export const putItems = function(scene, loader, items){
 	items.map((item)=>{
 		//the item fields are url, position, rotation
@@ -16,7 +20,17 @@ export const putItems = function(scene, loader, items){
 			data.scene.rotation.x = item.rotation.x;
 			data.scene.rotation.y = item.rotation.y;
 			data.scene.rotation.z = item.rotation.z;
-
+            
+            for(let i=0; i<data.scene.children.length; i++){
+                if(data.scene.children[i].children.length>0){
+                    for(let j=0; j<data.scene.children[i].children.length; j++){
+                        window.sceneObjects.push(data.scene.children[i].children[j]);
+                    }
+                }
+                else{
+                    window.sceneObjects.push(data.scene.children[i]);
+                }
+            }
 			scene.add(data.scene);
 		})
 	})

@@ -1,10 +1,10 @@
 import { Component } from 'react'
 import * as THREE from 'three'
+import { Geometry } from 'three/examples/jsm/deprecated/Geometry'
 
 
 // CONSTANTS
 const fadeDuration = 0.2;
-const runVelocity = 5;
 const walkVelocity = 2;
 const DIRECTIONS = ['w', 'a', 's', 'd'];
 
@@ -13,22 +13,23 @@ export default class CharacterControls extends Component {
     constructor(model, mixer, animationsMap, orbitControl, camera, currentAction = 'Idle'){
 
         super()
-        this.model = model
-        this.mixer = mixer
-        this.animationsMap = animationsMap
-        this.currentAction = currentAction
+        this.model = model;
+        this.mixer = mixer;
+        this.animationsMap = animationsMap;
+        this.currentAction = currentAction;
         this.animationsMap.forEach((value, key) => {
             if (key == currentAction) {
-                value.play()
+                value.play();
             }
         })
-        this.orbitControl = orbitControl
-        this.camera = camera
+        this.orbitControl = orbitControl;
+        this.camera = camera;
         this.walkDirection = new THREE.Vector3();
         this.rotateAngle = new THREE.Vector3(0, 1, 0);
         this.rotateQuarternion = new THREE.Quaternion();
         this.cameraTarget = new THREE.Vector3();
-        this.updateCameraTarget(0,0)
+        this.lastCharPos = {x:0, z:0};
+        this.updateCameraTarget(0,0);
 
         // state
         this.toggleRun = false;
@@ -49,13 +50,13 @@ export default class CharacterControls extends Component {
         }
 
         if (this.currentAction != play) {
-            const toPlay = this.animationsMap.get(play)
-            const current = this.animationsMap.get(this.currentAction)
+            const toPlay = this.animationsMap.get(play);
+            const current = this.animationsMap.get(this.currentAction);
 
-            current.fadeOut(fadeDuration)
+            current.fadeOut(fadeDuration);
             toPlay.reset().fadeIn(fadeDuration).play();
 
-            this.currentAction = play
+            this.currentAction = play;
         }
 
         this.mixer.update(delta)
@@ -78,15 +79,40 @@ export default class CharacterControls extends Component {
             this.walkDirection.normalize()
             this.walkDirection.applyAxisAngle(this.rotateAngle, directionOffset)
 
-            // run/walk velocity
-            const velocity = walkVelocity
-
             // move model & camera
-            const moveX = this.walkDirection.x * velocity * delta
-            const moveZ = this.walkDirection.z * velocity * delta
+            const moveX = this.walkDirection.x * walkVelocity * delta
+            const moveZ = this.walkDirection.z * walkVelocity * delta
+
             this.model.position.x += moveX
             this.model.position.z += moveZ
-            this.updateCameraTarget(moveX, moveZ)
+            this.model.boundingObj.position.x += moveX
+            this.model.boundingObj.position.z += moveZ
+
+            let collisionDetected = false;
+            let boundingGeometry = new Geometry().fromBufferGeometry(this.model.boundingObj.geometry);
+
+            for (let vertexIndex=0; vertexIndex < boundingGeometry.vertices.length; vertexIndex++){
+                var localVertex = boundingGeometry.vertices[vertexIndex].clone();
+                var globalVertex = localVertex.applyMatrix4(this.model.boundingObj.matrix);
+                var directionVector = globalVertex.sub(this.model.boundingObj.position);
+
+                var ray = new THREE.Raycaster( this.model.boundingObj.position, directionVector.clone().normalize() );
+                var collisionResults = ray.intersectObjects(window.sceneObjects);
+                if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()){
+                    this.model.position.x = this.lastCharPos.x;
+                    this.model.position.z = this.lastCharPos.z;
+                    this.model.boundingObj.position.x = this.lastCharPos.x;
+                    this.model.boundingObj.position.z = this.lastCharPos.z;
+                    collisionDetected = true;
+                    break;
+                }
+                else{
+                    this.lastCharPos.x = this.model.position.x;
+                    this.lastCharPos.z = this.model.position.z;
+                    collisionDetected = false;
+                }
+            }
+            if(!collisionDetected){this.updateCameraTarget(moveX, moveZ);}
         }
     }
 
