@@ -3,11 +3,13 @@ import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import CharacterControls from './characterControls';
+import AvatarCreator from './avatarCreator';
 import mainChar from './static/glb_files/Soldier.glb'
 import {items, putItems} from './items'
 
+
 const createBoundingObj = (position) => {
-    const objGeometry = new THREE.CylinderGeometry( 1, 1);
+    const objGeometry = new THREE.CylinderGeometry( .5, .5);
     const objMaterial = new THREE.MeshBasicMaterial({transparent:true, opacity:0});
     const boundingObj = new THREE.Mesh(objGeometry, objMaterial);
 	boundingObj.position.set(position.x, position.y, position.z);
@@ -19,6 +21,7 @@ export default class Store extends Component {
 
 	componentDidMount() {
 		const scene = new THREE.Scene();
+		window.scene = scene;
 		const canvas = document.getElementById('webgl');
 		const renderer = new THREE.WebGLRenderer({
 			canvas: canvas,
@@ -48,27 +51,7 @@ export default class Store extends Component {
 		const loader = new GLTFLoader();
 		loader.crossOrigin = true;
 
-		loader.load(mainChar, function (data) {
-
-			const model = data.scene;
-			model.traverse(function (object) {
-				if (object.isMesh) object.castShadow = true;
-			});
-
-			let objPos = {x:model.position.x, y:1, z:model.position.z};
-			model.boundingObj = createBoundingObj(objPos);
-
-			scene.add(model);
-			scene.add(model.boundingObj);
-
-			const charAnimations = data.animations;
-			const mixer = new THREE.AnimationMixer(model);
-			const animationsMap = new Map();
-			charAnimations.filter(a => a.name != 'TPose').forEach((a) => {
-				animationsMap.set(a.name, mixer.clipAction(a));
-			})
-			characterControls = new CharacterControls(model, mixer, animationsMap, orbitControls, camera, 'Idle');
-		});
+		putItems(scene, loader, items);
 
 		// CONTROL KEYS
 		let keysPressed = {};
@@ -78,8 +61,6 @@ export default class Store extends Component {
 		document.addEventListener('keyup', (e) => {
 			(keysPressed)[e.key.toLowerCase()] = false;
 		}, false);
-
-		putItems(scene, loader, items);
 
 		const clock = new THREE.Clock();
 
@@ -102,6 +83,7 @@ export default class Store extends Component {
 		return (
 			<div className="Store">
 				<canvas id='webgl'></canvas>
+				<AvatarCreator/>
 			</div>
 		)
 	}

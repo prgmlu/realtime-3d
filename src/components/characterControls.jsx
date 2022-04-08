@@ -99,20 +99,37 @@ export default class CharacterControls extends Component {
                 var ray = new THREE.Raycaster( this.model.boundingObj.position, directionVector.clone().normalize() );
                 var collisionResults = ray.intersectObjects(window.sceneObjects);
                 if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()){
-                    this.model.position.x = this.lastCharPos.x;
-                    this.model.position.z = this.lastCharPos.z;
-                    this.model.boundingObj.position.x = this.lastCharPos.x;
-                    this.model.boundingObj.position.z = this.lastCharPos.z;
                     collisionDetected = true;
                     break;
                 }
                 else{
-                    this.lastCharPos.x = this.model.position.x;
-                    this.lastCharPos.z = this.model.position.z;
                     collisionDetected = false;
                 }
             }
-            if(!collisionDetected){this.updateCameraTarget(moveX, moveZ);}
+            if(collisionDetected){
+                this.model.position.x -= (8*moveX);
+                this.model.position.z -= (8*moveZ);
+                this.model.boundingObj.position.x -= (8*moveX);
+                this.model.boundingObj.position.z -= (8*moveZ);
+            }
+            else{
+                this.updateCameraTarget(moveX, moveZ);
+            }
+
+            for(let i=0; i<window.interactObjects.length; i++){
+                let distFromChar = window.interactObjects[i].position.distanceTo(this.model.position);
+                if(distFromChar < 1.6){
+                    // console.log(distFromChar)
+                    // console.log(window.interactObjects[i].material)
+                }
+            }
+        }
+
+        else if (this.currentAction == 'Interacting'){
+            var camDistance = this.camera.position.length();
+            console.log(window.sceneObjects)
+            // var targetPos = new THREE.Vector3(point.x,point.y,point.z);
+            // targetPos.normalize().multiplyScalar(-camDistance);
         }
     }
 
