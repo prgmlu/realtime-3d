@@ -1,4 +1,3 @@
-import { Component } from 'react'
 import * as THREE from 'three'
 import { Geometry } from 'three/examples/jsm/deprecated/Geometry'
 
@@ -8,11 +7,9 @@ const fadeDuration = 0.2;
 const walkVelocity = 2;
 const DIRECTIONS = ['w', 'a', 's', 'd'];
 
-export default class CharacterControls extends Component {
+export default class CharacterControls {
 
     constructor(model, mixer, animationsMap, orbitControl, camera, currentAction = 'Idle'){
-
-        super()
         this.model = model;
         this.mixer = mixer;
         this.animationsMap = animationsMap;

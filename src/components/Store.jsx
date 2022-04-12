@@ -7,6 +7,7 @@ import AvatarCreator from './avatarCreator';
 import Animations from './static/glb_files/animations.glb'
 import defaultChar from './static/glb_files/defaultChar.glb'
 import {items, putItems} from './items'
+import Lights from './Lights';
 
 
 const  USE_AVATAR_CREATOR = false;
@@ -130,11 +131,8 @@ export default class Store extends Component {
 		}, false);
 
 		//LIGHTS
-		const light = new THREE.SpotLight(0xffffff, 0.8);
-		light.angle = Math.PI / 3;
-		light.position.set(0, 10, 0);
-		this.scene.add(light);
-		this.scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+		const Light = new Lights(this.scene, this.renderer);
+		Light.setUpNormalLights();
 
 		//STORE OBJECTS
 		putItems(this.scene, this.loader, items);
