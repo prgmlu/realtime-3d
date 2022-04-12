@@ -9,7 +9,7 @@ import defaultChar from './static/glb_files/defaultChar.glb'
 import {items, putItems} from './items'
 
 
-const  USE_AVATAR_CREATOR = true;
+const  USE_AVATAR_CREATOR = false;
 
 const createBoundingObj = (position) => {
     const objGeometry = new THREE.CylinderGeometry( .5, .5);

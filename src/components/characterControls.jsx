@@ -71,7 +71,7 @@ export default class CharacterControls extends Component {
 
             // rotate model
             this.rotateQuarternion.setFromAxisAngle(this.rotateAngle, angleYCameraDirection + directionOffset)
-            this.model.quaternion.rotateTowards(this.rotateQuarternion, -0.2)
+            this.model.quaternion.rotateTowards(this.rotateQuarternion, -0.07)
 
             // calculate direction
             this.camera.getWorldDirection(this.walkDirection)
