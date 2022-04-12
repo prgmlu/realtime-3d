@@ -111,6 +111,7 @@ export default class CharacterControls extends Component {
                 this.model.position.z -= (8*moveZ);
                 this.model.boundingObj.position.x -= (8*moveX);
                 this.model.boundingObj.position.z -= (8*moveZ);
+                this.updateCameraTarget((-8)*moveX, (-8)*moveZ);
             }
             else{
                 this.updateCameraTarget(moveX, moveZ);
