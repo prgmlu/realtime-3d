@@ -4,7 +4,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import CharacterControls from './characterControls';
 import AvatarCreator from './avatarCreator';
-import mainChar from './static/glb_files/Soldier.glb'
+import Animations from './static/glb_files/animations.glb'
+import defaultChar from './static/glb_files/defaultChar.glb'
 import {items, putItems} from './items'
 
 
@@ -18,40 +19,120 @@ const createBoundingObj = (position) => {
 
 
 export default class Store extends Component {
+	constructor(){
+		super()
+		this.canvas = {};
+		this.renderer = {};
+		this.scene = new THREE.Scene();
+		this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+		this.orbitControls = {};
+		this.characterControls = {};
+		this.loader = new GLTFLoader();
+	}
+
+	loadAvatar = (avatar) => {
+
+		let animations = {};
+	
+		this.loader.load(Animations, (data) => {
+			animations = data.animations;
+		});
+
+		this.loader.load(avatar, (data) => {
+			const model = data.scene;
+			model.traverse(function (object) {
+				if (object.isMesh) object.castShadow = true;
+			});
+
+			model.rotation.y = Math.PI;
+			model.position.x = 0;
+			model.position.z = 6;
+
+			let objPos = {x:model.position.x, y:1, z:model.position.z};
+			model.boundingObj = createBoundingObj(objPos);
+			this.scene.add(model);
+			this.scene.add(model.boundingObj);
+
+			const charAnimations = animations;
+			const mixer = new THREE.AnimationMixer(model);
+			const animationsMap = new Map();
+			charAnimations.filter(a => a.name != 'TPose').forEach((a) => {
+				animationsMap.set(a.name, mixer.clipAction(a));
+			})
+			this.characterControls = new CharacterControls(model, mixer, animationsMap, this.orbitControls, this.camera, 'Idle');
+		});
+	}
+
+	parse = (event) => {
+		try{
+			return JSON.parse(event.data);
+		}
+		catch(error){
+			console.log(error);
+		}
+	}
+
+	subscribe = (event) =>{
+
+		const json = this.parse(event);
+	
+		if (json?.source !== 'readyplayerme') {
+			return;
+		}
+	
+		// Susbribe to all events sent from Ready Player Me once frame is ready
+		if (json.eventName === 'v1.frame.ready') {
+
+			frame.contentWindow.postMessage(
+			JSON.stringify({
+				target: 'readyplayerme',
+				type: 'subscribe',
+				eventName: 'v1.**'
+			}),
+			'*'
+			);
+		}
+	
+		// Get avatar GLB URL
+		if (json.eventName === 'v1.avatar.exported') {
+
+			this.loadAvatar(json.data.url);
+			document.getElementById('frame').hidden = true;
+		}
+	
+		// Get user id
+		if (json.eventName === 'v1.user.set') {
+
+			console.log(`User with id ${json.data.id} set: ${JSON.stringify(json)}`);
+		}
+	}
 
 	componentDidMount() {
-		const scene = new THREE.Scene();
-		window.scene = scene;
-		const canvas = document.getElementById('webgl');
-		const renderer = new THREE.WebGLRenderer({
-			canvas: canvas,
+		this.canvas = document.getElementById('webgl');
+		this.renderer = new THREE.WebGLRenderer({
+			canvas: this.canvas,
 		});
-		renderer.setSize(window.innerWidth, window.innerHeight);
+		this.renderer.setSize(window.innerWidth, window.innerHeight);
 
 		const light = new THREE.SpotLight(0xffffff, 0.8);
 		light.angle = Math.PI / 3;
 		light.position.set(0, 10, 0);
-		scene.add(light);
+		this.scene.add(light);
 
-		scene.add(new THREE.AmbientLight(0xffffff, 0.7));
-
-		const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+		this.scene.add(new THREE.AmbientLight(0xffffff, 0.7));
 
 		// CONTROLS
-		const orbitControls = new OrbitControls(camera, renderer.domElement);
-		orbitControls.enableDamping = true;
-		orbitControls.minDistance = 2;
-		orbitControls.maxDistance = 5;
-		orbitControls.enablePan = false;
-		orbitControls.maxPolarAngle = Math.PI / 2 - 0.05;
-		orbitControls.update();
+		this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement);
+		this.orbitControls.enableDamping = true;
+		this.orbitControls.minDistance = 2;
+		this.orbitControls.maxDistance = 5;
+		this.orbitControls.enablePan = false;
+		this.orbitControls.maxPolarAngle = Math.PI / 2 - 0.05;
+		this.orbitControls.update();
 
-		let characterControls = {};
+		this.loader.crossOrigin = true;
 
-		const loader = new GLTFLoader();
-		loader.crossOrigin = true;
-
-		putItems(scene, loader, items);
+		putItems(this.scene, this.loader, items);
 
 		// CONTROL KEYS
 		let keysPressed = {};
@@ -64,15 +145,26 @@ export default class Store extends Component {
 
 		const clock = new THREE.Clock();
 
-		function animate() {
+		 //Ready Player Me
+
+		 const frame = document.getElementById('frame');
+		 frame.src = ' https://obsessvr.readyplayer.me/avatar?frameApi';
+		 document.getElementById('frame').hidden = false;
+		 window.addEventListener('message', this.subscribe);
+		 document.addEventListener('message', this.subscribe);
+
+		//Default Character
+
+		// this.loadAvatar(defaultChar);
+
+		const animate = () => {
 
 			let mixerUpdateDelta = clock.getDelta();
-			if (characterControls.update) {
-				characterControls.update(mixerUpdateDelta, keysPressed);
+			if (this.characterControls.update) {
+				this.characterControls.update(mixerUpdateDelta, keysPressed);
 			}
-
-			orbitControls.update();
-			renderer.render(scene, camera);
+			this.orbitControls.update();
+			this.renderer.render(this.scene, this.camera);
 			requestAnimationFrame(animate);
 		}
 
@@ -83,7 +175,7 @@ export default class Store extends Component {
 		return (
 			<div className="Store">
 				<canvas id='webgl'></canvas>
-				<AvatarCreator/>
+				<AvatarCreator loader={this.loader} scene={this.scene} orbitControls={this.orbitControls} characterControls={this.characterControls}/>
 			</div>
 		)
 	}
