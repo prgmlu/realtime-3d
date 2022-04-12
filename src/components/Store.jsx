@@ -1,251 +1,178 @@
-
 import React, { Component } from 'react'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { PointerLockControls } from './PointerLockControls'
-import wallImage from './static/wall.jpg'
-import {items, putItems} from './items';
-
-var moveForward = false;
-var moveBackward = false;
-var moveLeft = false;
-var moveRight = false;
-
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import CharacterControls from './characterControls';
+import AvatarCreator from './avatarCreator';
+import Animations from './static/glb_files/animations.glb'
+import defaultChar from './static/glb_files/defaultChar.glb'
+import {items, putItems} from './items'
+import Lights from './Lights';
 
 
-var prevTime = performance.now();
-const velocity = new THREE.Vector3();
-const direction = new THREE.Vector3();
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
-var objectIntersected = false;
-const lastCamPos = new THREE.Vector3();
+const  USE_AVATAR_CREATOR = false;
 
-const createStore = () => {
-	const textureLoader = new THREE.TextureLoader();
-	const newStore = new THREE.Group();
-
-	const wallGeometry = new THREE.PlaneGeometry(20, 5, 100, 100);
-	const wallTexture = textureLoader.load(wallImage);
-	const wallMaterial = new THREE.MeshStandardMaterial({ map: wallTexture, side: THREE.DoubleSide });
-	wallTexture.anisotropy = 16;
-	wallTexture.wrapS = wallTexture.wrapT = THREE.RepeatWrapping;
-	wallTexture.repeat.set(1, 1);
-	wallTexture.encoding = THREE.sRGBEncoding;
-
-	const firstWall = new THREE.Mesh(wallGeometry, wallMaterial);
-	firstWall.position.z = -10;
-	firstWall.position.y = 2.5;
-
-	const secondWall = new THREE.Mesh(wallGeometry, wallMaterial);
-	secondWall.position.z = 10;
-	secondWall.position.y = 2.5;
-
-	const thirdWall = new THREE.Mesh(wallGeometry, wallMaterial);
-	thirdWall.rotation.y = Math.PI / 2;
-	thirdWall.position.x = 10;
-	thirdWall.position.y = 2.5;
-
-	const fourthWall = new THREE.Mesh(wallGeometry, wallMaterial);
-	fourthWall.rotation.y = Math.PI / 2;
-	fourthWall.position.x = -10;
-	fourthWall.position.y = 2.5;
-
-	newStore.add(firstWall, secondWall, thirdWall, fourthWall);
-
-	return newStore;
+const createBoundingObj = (position) => {
+    const objGeometry = new THREE.CylinderGeometry( .5, .5);
+    const objMaterial = new THREE.MeshBasicMaterial({transparent:true, opacity:0});
+    const boundingObj = new THREE.Mesh(objGeometry, objMaterial);
+	boundingObj.position.set(position.x, position.y, position.z);
+    return boundingObj
 }
 
-const onKeyDown = function (event) {
 
-	switch (event.code) {
-
-		case 'ArrowUp':
-		case 'KeyW':
-			moveForward = true;
-			break;
-
-		case 'ArrowLeft':
-		case 'KeyA':
-			moveLeft = true;
-			break;
-
-		case 'ArrowDown':
-		case 'KeyS':
-			moveBackward = true;
-			break;
-
-		case 'ArrowRight':
-		case 'KeyD':
-			moveRight = true;
-			break;
-
-	}
-};
-
-const onKeyUp = function (event) {
-
-	switch (event.code) {
-
-		case 'ArrowUp':
-		case 'KeyW':
-			moveForward = false;
-			break;
-
-		case 'ArrowLeft':
-		case 'KeyA':
-			moveLeft = false;
-			break;
-
-		case 'ArrowDown':
-		case 'KeyS':
-			moveBackward = false;
-			break;
-
-		case 'ArrowRight':
-		case 'KeyD':
-			moveRight = false;
-			break;
-
-	}
-};
-
-function onMouseMove(event) {
-	mouse.x = (event.clientX / document.body.innerWidth) * 2 - 1;
-	mouse.y = - (event.clientY / document.body.innerHeight) * 2 + 1;
-}
 export default class Store extends Component {
+	constructor(){
+		super()
+		this.canvas = {};
+		this.renderer = {};
+		this.scene = new THREE.Scene();
+		this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+		this.orbitControls = {};
+		this.characterControls = {};
+		this.loader = new GLTFLoader();
+		this.loader.crossOrigin = true;
+		this.animations = this.loader.load(Animations, (data) => {this.animations = data.animations});
+	}
+
+	loadAvatar = (avatar) => {
+	
+		this.loader.load(avatar, (data) => {
+			const model = data.scene;
+			model.traverse(function (object) {
+				if (object.isMesh) object.castShadow = true;
+			});
+
+			model.rotation.y = Math.PI;
+			model.position.x = 0;
+			model.position.z = 6;
+
+			let objPos = {x:model.position.x, y:1, z:model.position.z};
+			model.boundingObj = createBoundingObj(objPos);
+			this.scene.add(model);
+			this.scene.add(model.boundingObj);
+
+			const charAnimations = this.animations;
+			const mixer = new THREE.AnimationMixer(model);
+			const animationsMap = new Map();
+			charAnimations.filter(a => a.name != 'TPose').forEach((a) => {
+				animationsMap.set(a.name, mixer.clipAction(a));
+			})
+			this.characterControls = new CharacterControls(model, mixer, animationsMap, this.orbitControls, this.camera, 'Idle');
+		});
+	}
+
+	parse = (event) => {
+		try{
+			return JSON.parse(event.data);
+		}
+		catch(error){
+			console.log(error);
+		}
+	}
+
+	subscribe = (event) =>{
+
+		const json = this.parse(event);
+	
+		if (json?.source !== 'readyplayerme') {
+			return;
+		}
+	
+		// Susbribe to all events sent from Ready Player Me once frame is ready
+		if (json.eventName === 'v1.frame.ready') {
+
+			frame.contentWindow.postMessage(
+			JSON.stringify({
+				target: 'readyplayerme',
+				type: 'subscribe',
+				eventName: 'v1.**'
+			}),
+			'*'
+			);
+		}
+	
+		// Get avatar GLB URL
+		if (json.eventName === 'v1.avatar.exported') {
+
+			this.loadAvatar(json.data.url);
+			document.getElementById('frame').hidden = true;
+		}
+	
+		// Get user id
+		if (json.eventName === 'v1.user.set') {
+
+			console.log(`User with id ${json.data.id} set: ${JSON.stringify(json)}`);
+		}
+	}
 
 	componentDidMount() {
-		const cursor = document.createElement('div')
-		cursor.style.width = '10px'
-		cursor.style.height = '10px'
-		cursor.style.background = 'red'
-		cursor.style.position = 'absolute'
-		cursor.style.top = '0'
-		cursor.style.left = '0'
-		cursor.style.right = '0'
-		cursor.style.bottom = '0'
-		cursor.style.margin = 'auto'
-		cursor.style.zIndex = '99'
-		document.body.appendChild(cursor)
-
-		const scene = new THREE.Scene();
-		const canvas = document.getElementById('webgl');
-		const renderer = new THREE.WebGLRenderer({
-			canvas: canvas,
+		this.canvas = document.getElementById('webgl');
+		this.renderer = new THREE.WebGLRenderer({
+			canvas: this.canvas,
 		});
-		renderer.setSize(window.innerWidth, window.innerHeight);
+		this.renderer.setSize(window.innerWidth, window.innerHeight);
 
-		const light = new THREE.SpotLight(0xffffff, 0.8);
-		light.angle = Math.PI / 3;
-		light.position.set(0, 10, 0);
-		scene.add(light);
+		// CONTROLS
+		this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement);
+		this.orbitControls.minDistance = 2;
+		this.orbitControls.maxDistance = 5;
+		this.orbitControls.enablePan = false;
+		this.orbitControls.maxPolarAngle = Math.PI / 2 - 0.05;
+		this.orbitControls.update();
 
-		scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+		// CONTROL KEYS
+		let keysPressed = {};
+		document.addEventListener('keydown', (e) => {
+			(keysPressed)[e.key.toLowerCase()] = true;
+		}, false);
+		document.addEventListener('keyup', (e) => {
+			(keysPressed)[e.key.toLowerCase()] = false;
+		}, false);
 
-		const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
-		camera.position.y = 1.5;
-		camera.position.z = 6;
+		//LIGHTS
+		const Light = new Lights(this.scene, this.renderer);
+		Light.setUpNormalLights();
 
-		const controls = new PointerLockControls(camera, canvas);
+		//STORE OBJECTS
+		putItems(this.scene, this.loader, items);
 
-		canvas.addEventListener('click', function () { controls.lock(); });
-		document.addEventListener('keydown', onKeyDown);
-		document.addEventListener('keyup', onKeyUp);
+		//CLOCK
+		const clock = new THREE.Clock();
 
-		// const surroundings = createStore();
-		// scene.add(surroundings);
+		if ( USE_AVATAR_CREATOR ) {
+			//READY PLAYER ME API
+			const frame = document.getElementById('frame');
+			frame.src = ' https://obsessvr.readyplayer.me/avatar?frameApi';
+			document.getElementById('frame').hidden = false;
+			window.addEventListener('message', this.subscribe);
+			document.addEventListener('message', this.subscribe);
+		}
+		else{
+			//DEFAULT CHARACTER
+			this.loadAvatar(defaultChar);
+		}
 
-		scene.add(controls.getObject());
+		const animate = () => {
 
-
-
-
-		const loader = new GLTFLoader();
-		loader.crossOrigin = true;
-
-		putItems(scene, loader, items)
-
-		function animate() {
-
-			const time = performance.now();
-
-			if (controls.isLocked === true) {
-
-				// raycaster.ray.origin.copy( controls.getObject().position );
-
-				raycaster.setFromCamera(mouse, camera);
-
-				// // calculate objects intersecting the picking ray
-				// const intersects = raycaster.intersectObjects( [sphere, window.tShirt] );
-
-				// if ( intersects && intersects.length > 0) {
-				//   objectIntersected = true;
-				// }
-
-				// else{
-				//   objectIntersected = false;
-				// }
-
-
-				const delta = (time - prevTime) / 1000;
-
-				velocity.x -= velocity.x * 10.0 * delta;
-				velocity.z -= velocity.z * 10.0 * delta;
-
-				direction.z = Number(moveForward) - Number(moveBackward);
-				direction.x = Number(moveRight) - Number(moveLeft);
-				direction.normalize(); // this ensures consistent movements in all directions
-
-				if (moveForward || moveBackward) {
-
-					velocity.z -= direction.z * 30.0 * delta;
-					lastCamPos.copy(camera.position);
-				}
-				if (moveLeft || moveRight) {
-
-					velocity.x -= direction.x * 30.0 * delta;
-					lastCamPos.copy(camera.position);
-				}
-
-				controls.moveRight(- velocity.x * delta);
-				controls.moveForward(- velocity.z * delta);
-
-				if (camera.position.x < -6.5 || camera.position.x > 6.5 || camera.position.z < -6.5 || camera.position.z > 6.5) {
-
-					camera.position.copy(lastCamPos);
-				}
-
-				controls.getObject().position.y += (velocity.y * delta); // new behavior
-
-				if (controls.getObject().position.y < 1.5) {
-
-					velocity.y = 0;
-					controls.getObject().position.y = 1.5;
-
-				}
+			let mixerUpdateDelta = clock.getDelta();
+			if (this.characterControls.update) {
+				this.characterControls.update(mixerUpdateDelta, keysPressed);
 			}
-
-			prevTime = time;
-
-			renderer.render(scene, camera);
-
+			this.orbitControls.update();
+			this.renderer.render(this.scene, this.camera);
 			requestAnimationFrame(animate);
-
 		}
 
 		animate();
-
 	}
 
 	render() {
 		return (
 			<div className="Store">
 				<canvas id='webgl'></canvas>
+				{USE_AVATAR_CREATOR && <AvatarCreator/>}
 			</div>
 		)
 	}
 }
-
-// export default Store;
