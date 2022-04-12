@@ -63,7 +63,7 @@ export default class CharacterControls extends Component {
 
         if (this.currentAction == 'Walk') {
             // calculate towards camera direction
-            var angleYCameraDirection = Math.atan2(
+            var angleYCameraDirection = Math.PI + Math.atan2(
                     (this.camera.position.x - this.model.position.x), 
                     (this.camera.position.z - this.model.position.z))
             // diagonal movement angle offset
@@ -71,7 +71,7 @@ export default class CharacterControls extends Component {
 
             // rotate model
             this.rotateQuarternion.setFromAxisAngle(this.rotateAngle, angleYCameraDirection + directionOffset)
-            this.model.quaternion.rotateTowards(this.rotateQuarternion, -0.07)
+            this.model.quaternion.rotateTowards(this.rotateQuarternion, 0.1)
 
             // calculate direction
             this.camera.getWorldDirection(this.walkDirection)
