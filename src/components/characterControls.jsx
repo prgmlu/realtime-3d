@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import { Geometry } from 'three/examples/jsm/deprecated/Geometry'
+import CollisionDetection from './CollisionDetection';
 
 
 // CONSTANTS
@@ -31,6 +32,7 @@ export default class CharacterControls {
         // state
         this.toggleRun = false;
         this.currentAction = currentAction;
+        this.collisionDetection = new CollisionDetection();
     }
 
     update(delta, keysPressed){
@@ -85,25 +87,10 @@ export default class CharacterControls {
             this.model.boundingObj.position.x += moveX
             this.model.boundingObj.position.z += moveZ
 
-            let collisionDetected = false;
             let boundingGeometry = new Geometry().fromBufferGeometry(this.model.boundingObj.geometry);
+            this.collisionDetection.detectCollision(boundingGeometry, this.model.boundingObj.matrix, this.model.boundingObj.position);
 
-            for (let vertexIndex=0; vertexIndex < boundingGeometry.vertices.length; vertexIndex++){
-                var localVertex = boundingGeometry.vertices[vertexIndex].clone();
-                var globalVertex = localVertex.applyMatrix4(this.model.boundingObj.matrix);
-                var directionVector = globalVertex.sub(this.model.boundingObj.position);
-
-                var ray = new THREE.Raycaster( this.model.boundingObj.position, directionVector.clone().normalize() );
-                var collisionResults = ray.intersectObjects(window.sceneObjects);
-                if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()){
-                    collisionDetected = true;
-                    break;
-                }
-                else{
-                    collisionDetected = false;
-                }
-            }
-            if(collisionDetected){
+            if(this.collisionDetection.collisionDetected){
                 this.model.position.x -= (8*moveX);
                 this.model.position.z -= (8*moveZ);
                 this.model.boundingObj.position.x -= (8*moveX);
