@@ -9,6 +9,8 @@ import defaultChar from './static/glb_files/defaultChar.glb'
 import {items, putItems} from './items'
 
 
+const  USE_AVATAR_CREATOR = true;
+
 const createBoundingObj = (position) => {
     const objGeometry = new THREE.CylinderGeometry( .5, .5);
     const objMaterial = new THREE.MeshBasicMaterial({transparent:true, opacity:0});
@@ -112,7 +114,6 @@ export default class Store extends Component {
 
 		// CONTROLS
 		this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement);
-		this.orbitControls.enableDamping = true;
 		this.orbitControls.minDistance = 2;
 		this.orbitControls.maxDistance = 5;
 		this.orbitControls.enablePan = false;
@@ -141,15 +142,18 @@ export default class Store extends Component {
 		//CLOCK
 		const clock = new THREE.Clock();
 
-		//READY PLAYER ME API
-		// const frame = document.getElementById('frame');
-		// frame.src = ' https://obsessvr.readyplayer.me/avatar?frameApi';
-		// document.getElementById('frame').hidden = false;
-		// window.addEventListener('message', this.subscribe);
-		// document.addEventListener('message', this.subscribe);
-
-		//DEFAULT CHARACTER
-		this.loadAvatar(defaultChar);
+		if ( USE_AVATAR_CREATOR ) {
+			//READY PLAYER ME API
+			const frame = document.getElementById('frame');
+			frame.src = ' https://obsessvr.readyplayer.me/avatar?frameApi';
+			document.getElementById('frame').hidden = false;
+			window.addEventListener('message', this.subscribe);
+			document.addEventListener('message', this.subscribe);
+		}
+		else{
+			//DEFAULT CHARACTER
+			this.loadAvatar(defaultChar);
+		}
 
 		const animate = () => {
 
@@ -169,7 +173,7 @@ export default class Store extends Component {
 		return (
 			<div className="Store">
 				<canvas id='webgl'></canvas>
-				{/* <AvatarCreator/> */}
+				{USE_AVATAR_CREATOR && <AvatarCreator/>}
 			</div>
 		)
 	}
