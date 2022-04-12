@@ -28,16 +28,12 @@ export default class Store extends Component {
 		this.orbitControls = {};
 		this.characterControls = {};
 		this.loader = new GLTFLoader();
+		this.loader.crossOrigin = true;
+		this.animations = this.loader.load(Animations, (data) => {this.animations = data.animations});
 	}
 
 	loadAvatar = (avatar) => {
-
-		let animations = {};
 	
-		this.loader.load(Animations, (data) => {
-			animations = data.animations;
-		});
-
 		this.loader.load(avatar, (data) => {
 			const model = data.scene;
 			model.traverse(function (object) {
@@ -53,7 +49,7 @@ export default class Store extends Component {
 			this.scene.add(model);
 			this.scene.add(model.boundingObj);
 
-			const charAnimations = animations;
+			const charAnimations = this.animations;
 			const mixer = new THREE.AnimationMixer(model);
 			const animationsMap = new Map();
 			charAnimations.filter(a => a.name != 'TPose').forEach((a) => {
@@ -114,13 +110,6 @@ export default class Store extends Component {
 		});
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 
-		const light = new THREE.SpotLight(0xffffff, 0.8);
-		light.angle = Math.PI / 3;
-		light.position.set(0, 10, 0);
-		this.scene.add(light);
-
-		this.scene.add(new THREE.AmbientLight(0xffffff, 0.7));
-
 		// CONTROLS
 		this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement);
 		this.orbitControls.enableDamping = true;
@@ -129,10 +118,6 @@ export default class Store extends Component {
 		this.orbitControls.enablePan = false;
 		this.orbitControls.maxPolarAngle = Math.PI / 2 - 0.05;
 		this.orbitControls.update();
-
-		this.loader.crossOrigin = true;
-
-		putItems(this.scene, this.loader, items);
 
 		// CONTROL KEYS
 		let keysPressed = {};
@@ -143,19 +128,28 @@ export default class Store extends Component {
 			(keysPressed)[e.key.toLowerCase()] = false;
 		}, false);
 
+		//LIGHTS
+		const light = new THREE.SpotLight(0xffffff, 0.8);
+		light.angle = Math.PI / 3;
+		light.position.set(0, 10, 0);
+		this.scene.add(light);
+		this.scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+
+		//STORE OBJECTS
+		putItems(this.scene, this.loader, items);
+
+		//CLOCK
 		const clock = new THREE.Clock();
 
-		 //Ready Player Me
+		//READY PLAYER ME API
+		// const frame = document.getElementById('frame');
+		// frame.src = ' https://obsessvr.readyplayer.me/avatar?frameApi';
+		// document.getElementById('frame').hidden = false;
+		// window.addEventListener('message', this.subscribe);
+		// document.addEventListener('message', this.subscribe);
 
-		 const frame = document.getElementById('frame');
-		 frame.src = ' https://obsessvr.readyplayer.me/avatar?frameApi';
-		 document.getElementById('frame').hidden = false;
-		 window.addEventListener('message', this.subscribe);
-		 document.addEventListener('message', this.subscribe);
-
-		//Default Character
-
-		// this.loadAvatar(defaultChar);
+		//DEFAULT CHARACTER
+		this.loadAvatar(defaultChar);
 
 		const animate = () => {
 
@@ -175,7 +169,7 @@ export default class Store extends Component {
 		return (
 			<div className="Store">
 				<canvas id='webgl'></canvas>
-				<AvatarCreator loader={this.loader} scene={this.scene} orbitControls={this.orbitControls} characterControls={this.characterControls}/>
+				{/* <AvatarCreator/> */}
 			</div>
 		)
 	}
