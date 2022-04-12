@@ -4,8 +4,8 @@ import CollisionDetection from './CollisionDetection';
 
 
 // CONSTANTS
-const fadeDuration = 0.2;
-const walkVelocity = 2;
+const FADE_DURATION = 0.2;
+const WALK_VELOCITY = 2;
 const DIRECTIONS = ['w', 'a', 's', 'd'];
 
 export default class CharacterControls {
@@ -52,8 +52,8 @@ export default class CharacterControls {
             const toPlay = this.animationsMap.get(play);
             const current = this.animationsMap.get(this.currentAction);
 
-            current.fadeOut(fadeDuration);
-            toPlay.reset().fadeIn(fadeDuration).play();
+            current.fadeOut(FADE_DURATION);
+            toPlay.reset().fadeIn(FADE_DURATION).play();
 
             this.currentAction = play;
         }
@@ -79,8 +79,8 @@ export default class CharacterControls {
             this.walkDirection.applyAxisAngle(this.rotateAngle, directionOffset)
 
             // move model & camera
-            const moveX = this.walkDirection.x * walkVelocity * delta
-            const moveZ = this.walkDirection.z * walkVelocity * delta
+            const moveX = this.walkDirection.x * WALK_VELOCITY * delta
+            const moveZ = this.walkDirection.z * WALK_VELOCITY * delta
 
             this.model.position.x += moveX
             this.model.position.z += moveZ

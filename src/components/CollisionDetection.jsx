@@ -1,9 +1,6 @@
-import React, { Component } from 'react'
 import * as THREE from 'three'
-
-export default class CollisionDetection extends Component {
+export default class CollisionDetection {
     constructor(){
-        super();
         this.collisionDetected = false;
     }
 
@@ -24,9 +21,4 @@ export default class CollisionDetection extends Component {
             }
         }
     }
-  render() {
-    return (
-        <></>
-    )
-  }
 }
