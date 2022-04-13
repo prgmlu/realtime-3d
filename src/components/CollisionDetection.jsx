@@ -13,11 +13,13 @@ export default class CollisionDetection {
             var ray = new THREE.Raycaster( objPosition, directionVector.clone().normalize() );
             var collisionResults = ray.intersectObjects(window.sceneObjects);
             if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()){
-                this.collisionDetected = true;
-                break;
+                // this.collisionDetected = true;
+                return true;
+                // break;
             }
             else{
-                this.collisionDetected = false;
+                return false;
+                // this.collisionDetected = false;
             }
         }
     }
