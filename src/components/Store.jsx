@@ -13,7 +13,7 @@ import Lights from './Lights';
 const  USE_AVATAR_CREATOR = false;
 
 const createBoundingObj = (position) => {
-    const objGeometry = new THREE.CylinderGeometry( .5, .5);
+    const objGeometry = new THREE.SphereGeometry( 1, 32, 32);
     const objMaterial = new THREE.MeshBasicMaterial({transparent:true, opacity:0});
     const boundingObj = new THREE.Mesh(objGeometry, objMaterial);
 	boundingObj.position.set(position.x, position.y, position.z);

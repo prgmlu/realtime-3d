@@ -5,7 +5,7 @@ import CollisionDetection from './CollisionDetection';
 
 // CONSTANTS
 const FADE_DURATION = 0.2;
-const WALK_VELOCITY = 10;
+const WALK_VELOCITY = 4;
 const DIRECTIONS = ['w', 'a', 's', 'd'];
 
 export default class CharacterControls {
@@ -43,6 +43,8 @@ export default class CharacterControls {
 
     goToLastSafePlace = () => {
         this.model.position.copy(this.lastSafePlace.clone());
+        var collisionHappened = this.collisionDetection.detectCollision(this.boundingGeometry, this.model.boundingObj.matrix, this.model.boundingObj.position);
+        console.log(collisionHappened)
     }
 
     update = (delta, keysPressed) => {
