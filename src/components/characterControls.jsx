@@ -5,13 +5,14 @@ import CollisionDetection from './CollisionDetection';
 
 // CONSTANTS
 const FADE_DURATION = 0.2;
-const WALK_VELOCITY = 2;
+const WALK_VELOCITY = 10;
 const DIRECTIONS = ['w', 'a', 's', 'd'];
 
 export default class CharacterControls {
 
     constructor(model, mixer, animationsMap, orbitControl, camera, currentAction = 'Idle'){
         this.model = model;
+        this.boundingGeometry = new Geometry().fromBufferGeometry(this.model.boundingObj.geometry);
         this.mixer = mixer;
         this.animationsMap = animationsMap;
         this.currentAction = currentAction;
@@ -35,18 +36,20 @@ export default class CharacterControls {
         this.collisionDetection = new CollisionDetection();
     }
 
-    update(delta, keysPressed){
+    setLastSafePlace = () => {
+        this.lastSafePlace = this.model.position.clone();
+        window.lastSafePlace = this.lastSafePlace;
+    }
+
+    goToLastSafePlace = () => {
+        this.model.position.copy(this.lastSafePlace.clone());
+    }
+
+    update = (delta, keysPressed) => {
 
         const directionPressed = DIRECTIONS.some(key => keysPressed[key] == true);
+        let play = directionPressed? 'Walk' : 'Idle';
 
-        let play = '';
-
-        if (directionPressed) {
-            play = 'Walk'
-        }
-        else {
-            play = 'Idle'
-        }
 
         if (this.currentAction != play) {
             const toPlay = this.animationsMap.get(play);
@@ -87,18 +90,18 @@ export default class CharacterControls {
             this.model.boundingObj.position.x += moveX
             this.model.boundingObj.position.z += moveZ
 
-            let boundingGeometry = new Geometry().fromBufferGeometry(this.model.boundingObj.geometry);
-            this.collisionDetection.detectCollision(boundingGeometry, this.model.boundingObj.matrix, this.model.boundingObj.position);
-
-            if(this.collisionDetection.collisionDetected){
-                this.model.position.x -= (8*moveX);
-                this.model.position.z -= (8*moveZ);
-                this.model.boundingObj.position.x -= (8*moveX);
-                this.model.boundingObj.position.z -= (8*moveZ);
-                this.updateCameraTarget((-8)*moveX, (-8)*moveZ);
+            var collisionHappened = this.collisionDetection.detectCollision(this.boundingGeometry, this.model.boundingObj.matrix, this.model.boundingObj.position);
+            if(collisionHappened){
+                this.model.position.x -= moveX
+                this.model.position.z -= moveZ
+                this.model.boundingObj.position.x -= moveX
+                this.model.boundingObj.position.z -= moveZ
+                this.goToLastSafePlace();
+                return;
             }
             else{
                 this.updateCameraTarget(moveX, moveZ);
+                this.setLastSafePlace();
             }
 
             for(let i=0; i<window.interactObjects.length; i++){

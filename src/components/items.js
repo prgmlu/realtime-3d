@@ -24,24 +24,13 @@ export const putItems = function(scene, loader, items){
 	items.map((item)=>{
 		//the item fields are url, position, rotation
 		loader.load(item.url,function(data){
-			data.scene.position.x = item.position.x;
-			data.scene.position.y = item.position.y;
-			data.scene.position.z = item.position.z;
-			
-			data.scene.rotation.x = item.rotation.x;
-			data.scene.rotation.y = item.rotation.y;
-			data.scene.rotation.z = item.rotation.z;
+            data.scene.position.copy(item.position)
+            data.scene.rotation.copy(item.rotation)
             
-            for(let i=0; i<data.scene.children.length; i++){
-                if(data.scene.children[i].children.length>0){
-                    for(let j=0; j<data.scene.children[i].children.length; j++){
-                        window.sceneObjects.push(data.scene.children[i].children[j]);
-                    }
-                }
-                else{
-                    window.sceneObjects.push(data.scene.children[i]);
-                }
-            }
+            data.scene.traverse((i)=>{
+                window.sceneObjects.push(i);
+            })
+            
             let interactionObj = createInteractionSphere({x:item.position.x, y:item.position.y, z:item.position.z})
             window.interactObjects.push(interactionObj);
 			scene.add(data.scene);
