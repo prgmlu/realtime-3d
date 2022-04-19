@@ -6,8 +6,10 @@ import CharacterControls from './characterControls';
 import AvatarCreator from './avatarCreator';
 import Animations from './static/glb_files/animations.glb'
 import defaultChar from './static/glb_files/defaultChar.glb'
-import {items, putItems} from './items'
+import {ItemCollection, items, putItems, getRaycastIntersects} from './items'
 import Lights from './Lights';
+import TWEEN from '@tweenjs/tween.js';
+import CollisionDetection from './CollisionDetection';
 
 
 const  USE_AVATAR_CREATOR = false;
@@ -27,10 +29,12 @@ export default class Store extends Component {
 		this.canvas = {};
 		this.renderer = {};
 		this.scene = new THREE.Scene();
+		window.mainScene = this.scene;
 		this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
 		this.orbitControls = {};
 		this.characterControls = {};
 		this.loader = new GLTFLoader();
+		this.collisionDetection = new CollisionDetection([]);
 		this.loader.crossOrigin = true;
 		this.animations = this.loader.load(Animations, (data) => {this.animations = data.animations});
 	}
@@ -57,8 +61,9 @@ export default class Store extends Component {
 			const animationsMap = new Map();
 			charAnimations.filter(a => a.name != 'TPose').forEach((a) => {
 				animationsMap.set(a.name, mixer.clipAction(a));
-			})
-			this.characterControls = new CharacterControls(model, mixer, animationsMap, this.orbitControls, this.camera, 'Idle');
+			});
+
+			this.characterControls = new CharacterControls(model, mixer, animationsMap, this.orbitControls, this.camera, 'Idle',this.collisionDetection );
 		});
 	}
 
@@ -107,6 +112,52 @@ export default class Store extends Component {
 	}
 
 	componentDidMount() {
+
+
+		window.addEventListener('click', (e)=>{
+			var hit = getRaycastIntersects(e,this.camera);
+			if (
+				hit &&
+				hit.length
+			) {
+				var point = hit[0].point;
+				var id = hit[0].object.userData.id;
+				var clickedItem = this.items.getItemById(id);
+				var camDistance = this.camera.position.length();
+				var originalPos = this.camera.position.clone();
+				var targetPos = new THREE.Vector3(point.x, point.y, point.z);
+				targetPos.normalize().multiplyScalar(-camDistance);
+				new TWEEN.Tween(originalPos)
+					.to(
+						{
+							x: targetPos.x,
+							y: targetPos.y,
+							z: targetPos.z,
+						},
+						1200,
+					)
+					.easing(TWEEN.Easing.Cubic.Out)
+					.onUpdate(() => {
+						this.camera.position.x = originalPos.x;
+						this.camera.position.y = originalPos.y;
+						this.camera.position.z = originalPos.z;
+					})
+					.start()
+					.onComplete(() => {
+					window.setItem(clickedItem);
+					document.querySelector('#modal').style.visibility='';
+						//
+					}, this);
+				// this.camera.position.copy(point).normalize().multiplyScalar(-camDistance);
+			}
+	
+
+
+
+			// alert(hit)
+		})
+		
+
 		this.canvas = document.getElementById('webgl');
 		this.renderer = new THREE.WebGLRenderer({
 			canvas: this.canvas,
@@ -135,7 +186,9 @@ export default class Store extends Component {
 		Light.setUpNormalLights();
 
 		//STORE OBJECTS
-		putItems(this.scene, this.loader, items);
+		this.items = new ItemCollection(this.scene, this.loader, this.camera, this.renderer)
+		this.items.putItems();
+		this.collisionDetection.setCollisionObjects(this.items.getAllObjectsParts())
 
 		//CLOCK
 		const clock = new THREE.Clock();
@@ -161,6 +214,9 @@ export default class Store extends Component {
 			}
 			this.orbitControls.update();
 			this.renderer.render(this.scene, this.camera);
+			TWEEN.update();
+
+
 			requestAnimationFrame(animate);
 		}
 

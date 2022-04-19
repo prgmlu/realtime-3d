@@ -1,92 +1,120 @@
 import * as THREE from 'three'
 import roomObject from './static/glb_files/walls.glb'
+// import roomObject from './static/glb_files/CoralStore_v001.glb'
 import shoes from './static/glb_files/shoes.glb'
 import shoes2 from './static/glb_files/shoes_2.glb'
 import smallBag from './static/glb_files/small_bag.glb'
 import smallBag2 from './static/glb_files/small_bag_2.glb'
 import bag from './static/glb_files/bag.glb'
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 
 
-const createInteractionSphere = (position) => {
-    const objGeometry = new THREE.SphereGeometry( .1);
-    const objMaterial = new THREE.MeshBasicMaterial({color:'red', transparent:true, opacity:0});
-    const boundingObj = new THREE.Mesh(objGeometry, objMaterial);
-	boundingObj.position.set(position.x, position.y, position.z);
-    return boundingObj
-}
 
-window.sceneObjects = [];
 window.interactObjects = [];
+window.cursorChangingObjects = [];
 
+export class ItemCollection {
+    constructor(scene, loader, camera, renderer){
 
-export const putItems = function(scene, loader, items){
+        window.addEventListener('mousemove', (e)=>{
+            var hit = getRaycastIntersects(e,this.camera);
+            if (hit && hit.length > 0) {
+                this.renderer.domElement.style.cursor = 'pointer';
+            } else {
+                this.renderer.domElement.style.cursor = 'default';
+            }
     
-	items.map((item)=>{
+        })
+        
+
+        this.scene = scene;
+        this.loader = loader;
+        this.camera = camera;
+        this.renderer = renderer;
+
+        this.items = items;
+        this.sceneItems = this.items.slice();
+
+
+        const dracoLoader = new DRACOLoader();
+        dracoLoader.setDecoderPath(
+            'https://www.gstatic.com/draco/v1/decoders/',
+        );
+        this.loader.setDRACOLoader(dracoLoader);
+
+        //this will be used for collision detection, and for raycasting and interaction
+        this.allObjectsParts = [];
+        window.allObjectsParts = this.allObjectsParts;
+    }
+
+    getAllObjectsParts = () => {
+        return this.allObjectsParts;
+    }
+
+    getItemById = (id) => {
+        return this.sceneItems[id];
+    }
+
+    putItems = () => {
+	this.items.map((item, indx)=>{
 		//the item fields are url, position, rotation
-		loader.load(item.url,function(data){
+		this.loader.load(item.url,(data) => {
             data.scene.position.copy(item.position)
             data.scene.rotation.copy(item.rotation)
             
             data.scene.traverse((i)=>{
-                window.sceneObjects.push(i);
+                if(i.name.includes('Floor') || i.name.includes('Glass')) {
+                    return
+                }
+                    ;
+                this.allObjectsParts.push(i);
+                i.userData.id = item.id;
+                //assuming the first item is the store walls
+                if(indx!=0){
+                    cursorChangingObjects.push(i);
+                }
             })
-            
-            let interactionObj = createInteractionSphere({x:item.position.x, y:item.position.y, z:item.position.z})
-            window.interactObjects.push(interactionObj);
-			scene.add(data.scene);
-            scene.add(interactionObj);
+			this.scene.add(data.scene);
+            this.sceneItems[item.id] = data.scene;
 		})
 	})
-
-    // const testGeo = new THREE.BoxGeometry(1, 1, 1);
-    // const testMat = new THREE.MeshBasicMaterial({color:'red', transparent:true, opacity:0});
-    // const testObj = new THREE.Mesh(testGeo, testMat);
-    // testObj.position.set(0, 2, 0);
-
-    // const _obj = testObj;
-
-    // const pointsArray = _obj.geometry.attributes.position.array;
-    // const itemSize = _obj.geometry.attributes.position.itemSize;
-    // let points = [];
-
-    // for (let i = 0; i < pointsArray.length; i += itemSize ) {
-    //     points.push( new THREE.Vector3( pointsArray[i], pointsArray[i+1], pointsArray[i+2]));
-    // }
-
-    // //Edge Lines
-    // const edgeGeometry = new THREE.EdgesGeometry( _obj.geometry );
-    // edgeGeometry.setAttribute('color', new THREE.Uint8BufferAttribute([
-    // 	255, 255, 0,
-    // 	255, 255, 0,
-    // 	0, 255, 255,
-    // 	0, 255, 255
-    // ], 3, true));
-    // edgeGeometry.computeBoundingSphere();
-
-    // const lines = new THREE.LineSegments(edgeGeometry,
-    //     new THREE.LineBasicMaterial({
-    //         color: '#3370FE',
-    //         linewidth: 10,
-    //         // transparent: true,
-    //         // opacity: 0.8,
-    //         // vertexColors: THREE.VertexColors,
-    //         // side: THREE.DoubleSide,
-    //     })
-    // );
-    // lines.position.set(0, 2, 0);
-    // scene.add(lines)
-
-    // //Edge Squares
-    // const edgeSquares = new THREE.Points(
-    //     new THREE.BufferGeometry().setFromPoints(points),
-    //     new THREE.PointsMaterial({ color:'#3370FE', size:0.02 })
-    // );
-    // edgeSquares.position.set(0, 2, 0);
-    // scene.add(edgeSquares)
+    }
 }
+
+
+
+let raycaster = new THREE.Raycaster();
+export const getRaycastIntersects = (e,camera) =>{
+    if (e.touches) {
+        // var x = this.lastEvent?.touches[0].pageX;
+        // var y = this.lastEvent?.touches[0].pageY;
+        var x = this.lastEvent?.touches[0].pageX;
+        var y = this.lastEvent?.touches[0].pageY;
+    } else {
+        var x = e.clientX;
+        var y = e.clientY;
+    }
+    raycaster.setFromCamera(
+        {
+            x: (x / window.innerWidth) * 2 - 1,
+            y: -(y / window.innerHeight) * 2 + 1,
+        },
+        camera,
+    );
+    if (window?.cursorChangingObjects) {
+        return raycaster.intersectObjects(
+            window.cursorChangingObjects.concat([]),
+        );
+    }
+    return [];
+}
+
+
+
 
 export const items = [
     {
+        id:0,
         url:roomObject,
         position : {
             x:0,
@@ -100,6 +128,7 @@ export const items = [
         }
     },
     {
+        id:1,
         url:shoes,
         position: {
             x:-4.2,
@@ -113,6 +142,7 @@ export const items = [
         },
     },
     {
+        id:2,
         url:shoes2,
         position: {
             x:3.8,
@@ -126,6 +156,7 @@ export const items = [
         },
     },
     {
+        id:3,
         url:bag,
         position: {
             x:3.6,
@@ -139,6 +170,7 @@ export const items = [
         },
     },
     {
+        id:4,
         url:smallBag,
         position: {
             x:-4.2,
@@ -152,6 +184,7 @@ export const items = [
         },
     },
     {
+        id:5,
         url:smallBag2,
         position: {
             x:-4.2,
