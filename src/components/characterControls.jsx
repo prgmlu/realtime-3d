@@ -1,6 +1,5 @@
 import * as THREE from 'three'
 import { Geometry } from 'three/examples/jsm/deprecated/Geometry'
-import CollisionDetection from './CollisionDetection';
 
 
 // CONSTANTS
@@ -10,12 +9,13 @@ const DIRECTIONS = ['w', 'a', 's', 'd'];
 
 export default class CharacterControls {
 
-    constructor(model, mixer, animationsMap, orbitControl, camera, currentAction = 'Idle'){
+    constructor(model, mixer, animationsMap, orbitControl, camera, currentAction = 'Idle' , collisionDetection){
         this.model = model;
         this.boundingGeometry = new Geometry().fromBufferGeometry(this.model.boundingObj.geometry);
         this.mixer = mixer;
         this.animationsMap = animationsMap;
         this.currentAction = currentAction;
+        this.collisionDetection = collisionDetection;
         this.animationsMap.forEach((value, key) => {
             if (key == currentAction) {
                 value.play();
@@ -33,12 +33,10 @@ export default class CharacterControls {
         // state
         this.toggleRun = false;
         this.currentAction = currentAction;
-        this.collisionDetection = new CollisionDetection();
     }
 
     setLastSafePlace = () => {
         this.lastSafePlace = this.model.position.clone();
-        window.lastSafePlace = this.lastSafePlace;
     }
 
     goToLastSafePlace = () => {
@@ -93,6 +91,7 @@ export default class CharacterControls {
             this.model.boundingObj.position.z += moveZ
 
             var collisionHappened = this.collisionDetection.detectCollision(this.boundingGeometry, this.model.boundingObj.matrix, this.model.boundingObj.position);
+            // var collisionHappened = false;
             if(collisionHappened){
                 this.model.position.x -= moveX
                 this.model.position.z -= moveZ
@@ -117,7 +116,6 @@ export default class CharacterControls {
 
         else if (this.currentAction == 'Interacting'){
             var camDistance = this.camera.position.length();
-            console.log(window.sceneObjects)
             // var targetPos = new THREE.Vector3(point.x,point.y,point.z);
             // targetPos.normalize().multiplyScalar(-camDistance);
         }

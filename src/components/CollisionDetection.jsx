@@ -1,7 +1,17 @@
 import * as THREE from 'three'
 export default class CollisionDetection {
-    constructor(){
+    constructor(collisionObjects){
         this.collisionDetected = false;
+        this.collisionObjects = collisionObjects;
+    }
+
+    setCollisionObjects = (collisionObjects) => {
+        this.collisionObjects = collisionObjects;
+        window.collisionObjects = this.collisionObjects;
+    }
+
+    getCollisionObjects = () => {
+        return this.collisionObjects;
     }
 
     detectCollision = (boundingGeometry, objMatrix, objPosition) => {
@@ -11,16 +21,19 @@ export default class CollisionDetection {
             var directionVector = globalVertex.sub(objPosition);
 
             var ray = new THREE.Raycaster( objPosition, directionVector.clone().normalize() );
-            var collisionResults = ray.intersectObjects(window.sceneObjects);
+            var collisionResults = ray.intersectObjects(this.collisionObjects);
+            var collision = false;
             if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()){
-                // this.collisionDetected = true;
-                return true;
-                // break;
+                for(var i=0; i<collisionResults.length; i++){
+                    // if(collisionResults[i].object.name.includes('Floor') || collisionResults[i].object.name.includes('Glass')) {
+                        // continue;
+                    // }
+                    // else{
+                        collision = true;
+                    // }
+                }
             }
-            else{
-                return false;
-                // this.collisionDetected = false;
-            }
+            return collision;
         }
     }
 }
