@@ -1,6 +1,6 @@
 import * as THREE from 'three'
-import roomObject from './static/glb_files/walls.glb'
-// import roomObject from './static/glb_files/CoralStore_v001.glb'
+import oldRoomObject from './static/glb_files/walls.glb'
+import newRoomObject from './static/glb_files/CoralStore_v001.glb'
 import shoes from './static/glb_files/shoes.glb'
 import shoes2 from './static/glb_files/shoes_2.glb'
 import smallBag from './static/glb_files/small_bag.glb'
@@ -9,12 +9,16 @@ import bag from './static/glb_files/bag.glb'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 
 
+// const NEW_STORE_WALLS = false;
+
+
 
 window.interactObjects = [];
 window.cursorChangingObjects = [];
 
 export class ItemCollection {
-    constructor(scene, loader, camera, renderer){
+    constructor(scene, loader, camera, renderer,USE_NEW_STORE_WALLS){
+        this.roomObject = USE_NEW_STORE_WALLS? newRoomObject: oldRoomObject;
 
         window.addEventListener('mousemove', (e)=>{
             var hit = getRaycastIntersects(e,this.camera);
@@ -25,6 +29,93 @@ export class ItemCollection {
             }
     
         })
+
+        this.items = [
+            {
+                id:0,
+                url:this.roomObject,
+                position : {
+                    x:0,
+                    y:0,
+                    z:USE_NEW_STORE_WALLS?2:0,
+                },
+                rotation: {
+                    x:0,
+                    y:0,
+                    z:0,
+                }
+            },
+            {
+                id:1,
+                url:shoes,
+                position: {
+                    x:-4.2,
+                    y:1.25,
+                    z:0,
+                },
+                rotation : {
+                    x:0,
+                    y:Math.PI/2,
+                    z:0,
+                },
+            },
+            {
+                id:2,
+                url:shoes2,
+                position: {
+                    x:3.8,
+                    y:1.25,
+                    z:.7,
+                },
+                rotation : {
+                    x:0,
+                    y:-Math.PI/2.5,
+                    z:0,
+                },
+            },
+            {
+                id:3,
+                url:bag,
+                position: {
+                    x:3.6,
+                    y:1.2,
+                    z:1.7,
+                },
+                rotation : {
+                    x:0,
+                    y:0,
+                    z:0,
+                },
+            },
+            {
+                id:4,
+                url:smallBag,
+                position: {
+                    x:-4.2,
+                    y:1.25,
+                    z:.9,
+                },
+                rotation : {
+                    x:0,
+                    y:Math.PI/2,
+                    z:0,
+                },
+            },
+            {
+                id:5,
+                url:smallBag2,
+                position: {
+                    x:-4.2,
+                    y:1.25,
+                    z:-.9,
+                },
+                rotation : {
+                    x:0,
+                    y:Math.PI/2,
+                    z:0,
+                },
+            }
+        ]
         
 
         this.scene = scene;
@@ -32,7 +123,7 @@ export class ItemCollection {
         this.camera = camera;
         this.renderer = renderer;
 
-        this.items = items;
+        // this.items = items;
         this.sceneItems = this.items.slice();
 
 
@@ -63,6 +154,7 @@ export class ItemCollection {
             data.scene.rotation.copy(item.rotation)
             
             data.scene.traverse((i)=>{
+                i.material && (i.material.envMapIntensity = 1.81);
                 if(i.name.includes('Floor') || i.name.includes('Glass')) {
                     return
                 }
@@ -112,89 +204,3 @@ export const getRaycastIntersects = (e,camera) =>{
 
 
 
-export const items = [
-    {
-        id:0,
-        url:roomObject,
-        position : {
-            x:0,
-            y:0,
-            z:0,
-        },
-        rotation: {
-            x:0,
-            y:0,
-            z:0,
-        }
-    },
-    {
-        id:1,
-        url:shoes,
-        position: {
-            x:-4.2,
-            y:1.25,
-            z:0,
-        },
-        rotation : {
-            x:0,
-            y:Math.PI/2,
-            z:0,
-        },
-    },
-    {
-        id:2,
-        url:shoes2,
-        position: {
-            x:3.8,
-            y:1.25,
-            z:.7,
-        },
-        rotation : {
-            x:0,
-            y:-Math.PI/2.5,
-            z:0,
-        },
-    },
-    {
-        id:3,
-        url:bag,
-        position: {
-            x:3.6,
-            y:1.2,
-            z:1.7,
-        },
-        rotation : {
-            x:0,
-            y:0,
-            z:0,
-        },
-    },
-    {
-        id:4,
-        url:smallBag,
-        position: {
-            x:-4.2,
-            y:1.25,
-            z:.9,
-        },
-        rotation : {
-            x:0,
-            y:Math.PI/2,
-            z:0,
-        },
-    },
-    {
-        id:5,
-        url:smallBag2,
-        position: {
-            x:-4.2,
-            y:1.25,
-            z:-.9,
-        },
-        rotation : {
-            x:0,
-            y:Math.PI/2,
-            z:0,
-        },
-    }
-]

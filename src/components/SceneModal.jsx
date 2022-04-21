@@ -32,7 +32,8 @@ class SceneModal extends Component {
 
 
         const Light = new Lights(this.scene, this.renderer);
-		Light.setUpNormalLights();
+		// Light.setUpNormalLights();
+		Light.setUpEnvMapLights();
         this.myRef = React.createRef();
 
         this.canRotate = false;
