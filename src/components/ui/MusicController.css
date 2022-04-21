@@ -1,0 +1,93 @@
+.musicController {
+    margin-right: 0.6em;
+    width: 1.9rem;
+    -webkit-tap-highlight-color:  rgba(255, 255, 255, 0);
+}
+
+/*
+ Absolute positioning so that animation is smooth bottom to top. For some reason, some combinations of bottom value and
+ gradient will cause the music controller to jitter (may be alleviated if the bottom of the gradient is white).
+ */
+.audio-bar {
+    width: 0.5rem;
+    /* position: absolute; */
+    bottom: 0.3rem;
+}
+
+#audio-bar-container, #audio-bar-container-old {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#audio-bar-container {
+    width: 2.5em;
+    height: 2.5em;    
+    /* margin-right: -80px;
+    margin-top: 30px; */
+}
+
+#bottomBarRight #audio-bar-container {
+    width: 3.5em;
+    height: 3.5em;    
+}
+
+#audio-bar-container-old {
+    height: 1.77em;
+    margin: 0 0.7em 0 0.35em;
+}
+
+#audio-bar-1 {
+    height: 1.5rem;
+    margin: auto 0 0;
+    /* left: 10.7rem; */
+}
+
+#audio-bar-2 {
+    height: 1.77rem;
+    margin: auto 0.2em 0;
+    /* left: 0.7rem; */
+}
+
+#audio-bar-3 {
+    height: 1.2rem;
+    margin: auto 0 0;
+    /* left: 1.4rem; */
+}
+
+.audio-bar.audio-on {
+    animation: sound 0ms -800ms ease-out infinite alternate;
+}
+
+.audio-bar.audio-off {
+    animation: none;
+}
+.audio-icon{
+    width: 3em; height: 3em; cursor:pointer; filter: invert(100%);
+}
+
+#bottomBarRight .audio-icon{
+    width: 3.5em; height: 3.5em; cursor:pointer; filter: invert(100%);
+}
+
+@keyframes sound {
+    0% {
+        opacity: 0.35;
+        height: 0.2em;
+    }
+    100% {
+        opacity: 1;
+        height: 1.77em;
+    }
+}
+
+.audio-bar:nth-child(1)  { animation-duration: 474ms; }
+.audio-bar:nth-child(2)  { animation-duration: 433ms; }
+.audio-bar:nth-child(3)  { animation-duration: 407ms; }
+.audio-bar:nth-child(4)  { animation-duration: 458ms; }
+.audio-bar:nth-child(5)  { animation-duration: 400ms; }
+.audio-bar:nth-child(6)  { animation-duration: 427ms; }
+.audio-bar:nth-child(7)  { animation-duration: 441ms; }
+.audio-bar:nth-child(8)  { animation-duration: 419ms; }
+.audio-bar:nth-child(9)  { animation-duration: 487ms; }
+.audio-bar:nth-child(10) { animation-duration: 442ms; }
