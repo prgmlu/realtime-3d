@@ -42,7 +42,6 @@ export default class CharacterControls {
     goToLastSafePlace = () => {
         this.model.position.copy(this.lastSafePlace.clone());
         var collisionHappened = this.collisionDetection.detectCollision(this.boundingGeometry, this.model.boundingObj.matrix, this.model.boundingObj.position);
-        console.log(collisionHappened)
     }
 
     update = (delta, keysPressed) => {
