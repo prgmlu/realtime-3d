@@ -13,6 +13,7 @@ import CollisionDetection from './CollisionDetection';
 
 
 const  USE_AVATAR_CREATOR = false;
+const USE_NEW_STORE_WALLS = false;
 
 const createBoundingObj = (position) => {
     const objGeometry = new THREE.SphereGeometry( 1, 32, 32);
@@ -44,6 +45,7 @@ export default class Store extends Component {
 		this.loader.load(avatar, (data) => {
 			const model = data.scene;
 			model.traverse(function (object) {
+				object.material && (object.material.envMapIntensity = 1.81);
 				if (object.isMesh) object.castShadow = true;
 			});
 
@@ -183,10 +185,13 @@ export default class Store extends Component {
 
 		//LIGHTS
 		const Light = new Lights(this.scene, this.renderer);
-		Light.setUpNormalLights();
+		// Light.setUpNormalLights();
+
+		let setBGImg = USE_NEW_STORE_WALLS? true: false;
+		Light.setUpEnvMapLights(setBGImg);
 
 		//STORE OBJECTS
-		this.items = new ItemCollection(this.scene, this.loader, this.camera, this.renderer)
+		this.items = new ItemCollection(this.scene, this.loader, this.camera, this.renderer, USE_NEW_STORE_WALLS)
 		this.items.putItems();
 		this.collisionDetection.setCollisionObjects(this.items.getAllObjectsParts())
 
