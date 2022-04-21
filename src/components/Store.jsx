@@ -6,10 +6,12 @@ import CharacterControls from './characterControls';
 import AvatarCreator from './avatarCreator';
 import Animations from './static/glb_files/animations.glb'
 import defaultChar from './static/glb_files/defaultChar.glb'
-import {ItemCollection, items, putItems, getRaycastIntersects} from './items'
+import {ItemCollection, getRaycastIntersects} from './items'
 import Lights from './Lights';
 import TWEEN from '@tweenjs/tween.js';
 import CollisionDetection from './CollisionDetection';
+import UI_Layer from './ui/UI_Layer';
+
 
 
 const  USE_AVATAR_CREATOR = false;
@@ -152,10 +154,6 @@ export default class Store extends Component {
 					}, this);
 				// this.camera.position.copy(point).normalize().multiplyScalar(-camDistance);
 			}
-	
-
-
-
 			// alert(hit)
 		})
 		
@@ -233,6 +231,7 @@ export default class Store extends Component {
 			<div className="Store">
 				<canvas id='webgl'></canvas>
 				{USE_AVATAR_CREATOR && <AvatarCreator/>}
+				<UI_Layer/>
 			</div>
 		)
 	}
