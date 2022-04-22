@@ -228,7 +228,7 @@ export default class Store extends Component {
 
 	render() {
 		return (
-			<div className="Store">
+			<div className="Store" style={{width:window.innerWidth, height:window.innerHeight, overflow:'hidden'}}>
 				<canvas id='webgl'></canvas>
 				{USE_AVATAR_CREATOR && <AvatarCreator/>}
 				<UI_Layer/>
