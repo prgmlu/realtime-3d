@@ -24,7 +24,7 @@ class SceneModal extends Component {
         this.scene = createScene();
         this.renderer = createRenderer();
 		this.camera = new THREE.PerspectiveCamera(
-			70,
+			50,
 			window.innerWidth / window.innerHeight,
 			0.1,
 			1000,
@@ -103,7 +103,7 @@ class SceneModal extends Component {
 
 	setZoom = (fov) => {
 		this.camera.fov = fov;
-		if (this.camera.fov < 20) this.camera.fov = 20;
+		if (this.camera.fov < 10) this.camera.fov = 10;
 		if (this.camera.fov > 50) this.camera.fov = 50;
 		this.camera.updateProjectionMatrix();
 	}
