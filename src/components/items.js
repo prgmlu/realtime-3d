@@ -9,10 +9,6 @@ import bag from './static/glb_files/bag.glb'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 
 
-// const NEW_STORE_WALLS = false;
-
-
-
 window.interactObjects = [];
 window.cursorChangingObjects = [];
 
@@ -39,81 +35,81 @@ export class ItemCollection {
                     y:0,
                     z:USE_NEW_STORE_WALLS?2:0,
                 },
-                rotation: {
-                    x:0,
-                    y:0,
-                    z:0,
-                }
+                rotation: [
+                    0,
+                    0,
+                    0,
+                ],
             },
             {
                 id:1,
                 url:shoes,
                 position: {
-                    x:-4.2,
+                    x:USE_NEW_STORE_WALLS?2:-4.2,
                     y:1.25,
-                    z:0,
+                    z:USE_NEW_STORE_WALLS?-3:0,
                 },
-                rotation : {
-                    x:0,
-                    y:Math.PI/2,
-                    z:0,
-                },
+                rotation : [
+                    0,
+                    USE_NEW_STORE_WALLS?0:Math.PI/2,
+                    0,
+                ],
             },
             {
                 id:2,
                 url:shoes2,
                 position: {
-                    x:3.8,
+                    x:USE_NEW_STORE_WALLS?1:3.8,
                     y:1.25,
-                    z:.7,
+                    z:USE_NEW_STORE_WALLS?-3:.7,
                 },
-                rotation : {
-                    x:0,
-                    y:-Math.PI/2.5,
-                    z:0,
-                },
+                rotation : [
+                    0,
+                    USE_NEW_STORE_WALLS?0:-Math.PI/2.5,
+                    0,
+                ],
             },
             {
                 id:3,
                 url:bag,
                 position: {
-                    x:3.6,
+                    x:USE_NEW_STORE_WALLS?0:3.6,
                     y:1.2,
-                    z:1.7,
+                    z:USE_NEW_STORE_WALLS?-3:1.7,
                 },
-                rotation : {
-                    x:0,
-                    y:0,
-                    z:0,
-                },
+                rotation : [
+                    0,
+                    USE_NEW_STORE_WALLS?(Math.PI/2):0,
+                    0,
+                ],
             },
             {
                 id:4,
                 url:smallBag,
                 position: {
-                    x:-4.2,
+                    x:USE_NEW_STORE_WALLS?-2:-4.2,
                     y:1.25,
-                    z:.9,
+                    z:USE_NEW_STORE_WALLS?-3:.9,
                 },
-                rotation : {
-                    x:0,
-                    y:Math.PI/2,
-                    z:0,
-                },
+                rotation : [
+                    0,
+                    USE_NEW_STORE_WALLS?(Math.PI):Math.PI/2,
+                    0,
+                ],
             },
             {
                 id:5,
                 url:smallBag2,
                 position: {
-                    x:-4.2,
+                    x:USE_NEW_STORE_WALLS?-1:-4.2,
                     y:1.25,
-                    z:-.9,
+                    z:USE_NEW_STORE_WALLS?-3:-.9,
                 },
-                rotation : {
-                    x:0,
-                    y:Math.PI/2,
-                    z:0,
-                },
+                rotation : [
+                    0,
+                    USE_NEW_STORE_WALLS?0:Math.PI/2,
+                    0,
+                ],
             }
         ]
         
@@ -151,8 +147,7 @@ export class ItemCollection {
 		//the item fields are url, position, rotation
 		this.loader.load(item.url,(data) => {
             data.scene.position.copy(item.position)
-            data.scene.rotation.copy(item.rotation)
-            
+            data.scene.rotation.fromArray(item.rotation)
             data.scene.traverse((i)=>{
                 i.material && (i.material.envMapIntensity = 1.81);
                 if(i.name.includes('Floor') || i.name.includes('Glass')) {

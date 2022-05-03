@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Lights from './Lights';
 import {createScene, createRenderer} from './threeHelpers'
 import * as THREE from 'three'
+import CartButton from './ui/buttons/CartButton';
 
 
 const ITEM_POS = [0,0,-1.5];
@@ -22,10 +23,12 @@ class SceneModal extends Component {
     constructor(props) {
         super(props);
         this.scene = createScene();
+        this.scene.background = new THREE.Color( 'white' );
         this.renderer = createRenderer();
+        this.renderer.setSize((window.innerWidth*.35), (window.innerHeight*.9));
 		this.camera = new THREE.PerspectiveCamera(
 			50,
-			window.innerWidth / window.innerHeight,
+			(window.innerWidth*.35) / (window.innerHeight*.9),
 			0.1,
 			1000,
 		);
@@ -227,45 +230,59 @@ class SceneModal extends Component {
     render() {
         return (
             <div
-            id='modal'
+            id='blur'
             style={{
+                width: '100%',
+                height: '100%',
                 backdropFilter: `blur(10px)`,
                 visibility:'hidden',
                 WebkitBackdropFilter: `blur(10px)`,
                 top:'0px',
                 left:'0px',
                 position: 'absolute',
-            }}
-             ref={this.myRef} >
+            }}>
+                <div
+                id='modal'
+                style={{
+                    visibility:'hidden',
+                    left: '50%',
+                    top: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    position: 'absolute',
+                }}
+                ref={this.myRef} >
 
-                        <div 
-						onClick={(e) => {
-							e.stopPropagation();
-                            this.unSetItem();
-                            document.querySelector('#modal').style.visibility='hidden';
-						}}
-						style={{
-							position: 'absolute',
-							background: '#340c0c',
-							borderRadius: '50%',
-							cursor: 'pointer',
-							margin: 25 + 'px',
-							zIndex: 2,
-							left: '66%',
-							top: '10%',
-						}}
-					>
-						<img
-							src="https://cdn.obsess-vr.com/modal-close-icon-normal.png"
-							style={{
-								maxWidth: '100%',
-								width: '2.8em',
-								float: 'right',
-							}}
-						></img>
-					</div>
+                            <div 
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                this.unSetItem();
+                                document.querySelector('#modal').style.visibility='hidden';
+                                document.querySelector('#blur').style.visibility='hidden';
+                            }}
+                            style={{
+                                position: 'absolute',
+                                background: '#340c0c',
+                                borderRadius: '50%',
+                                cursor: 'pointer',
+                                margin: 25 + 'px',
+                                zIndex: 2,
+                                right: '0',
+                                top: '0',
+                            }}
+                        >
+                            <img
+                                src="https://cdn.obsess-vr.com/modal-close-icon-normal.png"
+                                style={{
+                                    maxWidth: '100%',
+                                    width: '2.8em',
+                                    float: 'right',
+                                }}
+                            ></img>
+                        </div>
 
-
+                        <CartButton/>
+                        
+                </div>
             </div>
         );
     }

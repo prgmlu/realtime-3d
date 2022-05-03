@@ -1,0 +1,12 @@
+.cart-button {
+    position: absolute;
+    cursor: pointer;
+    bottom: 10px;
+    left: 50%;
+    transform: translate(-50%, 0); 
+}
+
+.cart-icon {
+    width: 100px;
+    height: 100px;
+}
