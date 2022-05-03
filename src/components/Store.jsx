@@ -53,7 +53,7 @@ export default class Store extends Component {
 
 			model.rotation.y = Math.PI;
 			model.position.x = 0;
-			model.position.z = 6;
+			model.position.z = USE_NEW_STORE_WALLS?0:6;
 
 			let objPos = {x:model.position.x, y:1, z:model.position.z};
 			model.boundingObj = createBoundingObj(objPos);
@@ -150,6 +150,7 @@ export default class Store extends Component {
 					.onComplete(() => {
 					window.setItem(clickedItem);
 					document.querySelector('#modal').style.visibility='';
+					document.querySelector('#blur').style.visibility='';
 						//
 					}, this);
 				// this.camera.position.copy(point).normalize().multiplyScalar(-camDistance);

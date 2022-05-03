@@ -4,8 +4,8 @@ import { Geometry } from 'three/examples/jsm/deprecated/Geometry'
 
 // CONSTANTS
 const FADE_DURATION = 0.2;
-const WALK_VELOCITY = 4;
-const DIRECTIONS = ['w', 'a', 's', 'd'];
+const WALK_VELOCITY = 3;
+const DIRECTIONS = ['w', 'a', 's', 'd', 'arrowup', 'arrowleft', 'arrowdown', 'arrowright'];
 
 export default class CharacterControls {
 
@@ -27,7 +27,6 @@ export default class CharacterControls {
         this.rotateAngle = new THREE.Vector3(0, 1, 0);
         this.rotateQuarternion = new THREE.Quaternion();
         this.cameraTarget = new THREE.Vector3();
-        this.lastCharPos = {x:0, z:0};
         this.updateCameraTarget(0,0);
 
         // state
@@ -103,20 +102,6 @@ export default class CharacterControls {
                 this.updateCameraTarget(moveX, moveZ);
                 this.setLastSafePlace();
             }
-
-            for(let i=0; i<window.interactObjects.length; i++){
-                let distFromChar = window.interactObjects[i].position.distanceTo(this.model.position);
-                if(distFromChar < 1.6){
-                    // console.log(distFromChar)
-                    // console.log(window.interactObjects[i].material)
-                }
-            }
-        }
-
-        else if (this.currentAction == 'Interacting'){
-            var camDistance = this.camera.position.length();
-            // var targetPos = new THREE.Vector3(point.x,point.y,point.z);
-            // targetPos.normalize().multiplyScalar(-camDistance);
         }
     }
 
@@ -135,23 +120,23 @@ export default class CharacterControls {
     directionOffset(keysPressed){
         var directionOffset = 0 // w
 
-        if (keysPressed['w']) {
-            if (keysPressed['a']) {
+        if (keysPressed['w'] || keysPressed['arrowup']) {
+            if (keysPressed['a'] || keysPressed['arrowleft']) {
                 directionOffset = Math.PI / 4 // w+a
-            } else if (keysPressed['d']) {
+            } else if (keysPressed['d'] || keysPressed['arrowright']) {
                 directionOffset = - Math.PI / 4 // w+d
             }
-        } else if (keysPressed['s']) {
-            if (keysPressed['a']) {
+        } else if (keysPressed['s'] || keysPressed['arrowdown']) {
+            if (keysPressed['a'] || keysPressed['arrowleft']) {
                 directionOffset = Math.PI / 4 + Math.PI / 2 // s+a
-            } else if (keysPressed['d']) {
+            } else if (keysPressed['d'] || keysPressed['arrowright']) {
                 directionOffset = -Math.PI / 4 - Math.PI / 2 // s+d
             } else {
                 directionOffset = Math.PI // s
             }
-        } else if (keysPressed['a']) {
+        } else if (keysPressed['a'] || keysPressed['arrowleft']) {
             directionOffset = Math.PI / 2 // a
-        } else if (keysPressed['d']) {
+        } else if (keysPressed['d'] || keysPressed['arrowright']) {
             directionOffset = - Math.PI / 2 // d
         }
 
