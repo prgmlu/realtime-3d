@@ -111,8 +111,6 @@ export default class Store extends Component {
 	
 		// Get user id
 		if (json.eventName === 'v1.user.set') {
-
-			console.log(`User with id ${json.data.id} set: ${JSON.stringify(json)}`);
 		}
 	}
 
