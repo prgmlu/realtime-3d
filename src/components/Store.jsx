@@ -15,7 +15,7 @@ import UI_Layer from './ui/UI_Layer';
 
 
 const  USE_AVATAR_CREATOR = false;
-const USE_NEW_STORE_WALLS = false;
+const USE_NEW_STORE_WALLS = true;
 
 const createBoundingObj = (position) => {
     const objGeometry = new THREE.SphereGeometry( 1, 32, 32);
@@ -164,6 +164,8 @@ export default class Store extends Component {
 			canvas: this.canvas,
 		});
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
+		this.renderer.physicallyCorrectLights = true
+		this.renderer.outputEncoding = THREE.sRGBEncoding;
 
 		// CONTROLS
 		this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement);
