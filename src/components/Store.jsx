@@ -108,10 +108,6 @@ export default class Store extends Component {
 			this.loadAvatar(json.data.url);
 			document.getElementById('frame').hidden = true;
 		}
-	
-		// Get user id
-		if (json.eventName === 'v1.user.set') {
-		}
 	}
 
 	componentDidMount() {
