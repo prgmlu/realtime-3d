@@ -52,6 +52,7 @@ export default class Store extends Component {
 			});
 
 			model.rotation.y = Math.PI;
+			model.position.y = 0.1;
 			model.position.x = 0;
 			model.position.z = USE_NEW_STORE_WALLS?0:6;
 
