@@ -1,21 +1,21 @@
-import React, { Component } from 'react'
-import * as THREE from 'three'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import CharacterControls from './characterControls';
-import AvatarCreator from './avatarCreator';
-import Animations from './static/glb_files/animations.glb'
-import defaultChar from './static/glb_files/defaultChar.glb'
-import {ItemCollection, getRaycastIntersects} from './items'
-import Lights from './Lights';
+import React, { Component } from 'react';
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import TWEEN from '@tweenjs/tween.js';
+import Lights from './Lights';
+import AvatarCreator from './avatarCreator';
+import CharacterControls from './characterControls';
 import CollisionDetection from './CollisionDetection';
+import {ItemCollection, getRaycastIntersects} from './items';
+import defaultChar from './static/glb_files/defaultChar.glb';
+import Animations from './static/glb_files/animations.glb';
 import UI_Layer from './ui/UI_Layer';
-
+import SceneModal from './SceneModal';
 
 
 const  USE_AVATAR_CREATOR = false;
-const USE_NEW_STORE_WALLS = true;
+const USE_NEW_STORE_WALLS = false;
 
 const createBoundingObj = (position) => {
     const objGeometry = new THREE.SphereGeometry( 1, 32, 32);
@@ -40,6 +40,10 @@ export default class Store extends Component {
 		this.collisionDetection = new CollisionDetection([]);
 		this.loader.crossOrigin = true;
 		this.animations = this.loader.load(Animations, (data) => {this.animations = data.animations});
+	}
+	state = {
+		showModal : false,
+		modalItem : {},
 	}
 
 	loadAvatar = (avatar) => {
@@ -143,9 +147,10 @@ export default class Store extends Component {
 					})
 					.start()
 					.onComplete(() => {
-					window.setItem(clickedItem);
-					document.querySelector('#modal').style.visibility='';
-					document.querySelector('#blur').style.visibility='';
+					this.setState({
+						showModal : true,
+						modalItem : clickedItem,
+					})
 						//
 					}, this);
 				// this.camera.position.copy(point).normalize().multiplyScalar(-camDistance);
@@ -181,10 +186,7 @@ export default class Store extends Component {
 
 		//LIGHTS
 		const Light = new Lights(this.scene, this.renderer);
-		// Light.setUpNormalLights();
-
-		let setBGImg = USE_NEW_STORE_WALLS? true: false;
-		Light.setUpEnvMapLights(setBGImg);
+		Light.setUpEnvMapLights(true);
 
 		//STORE OBJECTS
 		this.items = new ItemCollection(this.scene, this.loader, this.camera, this.renderer, USE_NEW_STORE_WALLS)
@@ -227,6 +229,7 @@ export default class Store extends Component {
 	render() {
 		return (
 			<div className="Store" style={{width:window.innerWidth, height:window.innerHeight, overflow:'hidden'}}>
+				{this.state.showModal && <SceneModal item={this.state.modalItem} closeModal={()=>{this.setState({showModal:false,modalItem:{}})}}/>}
 				<canvas id='webgl'></canvas>
 				{USE_AVATAR_CREATOR && <AvatarCreator/>}
 				<UI_Layer/>

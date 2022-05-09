@@ -11,10 +11,7 @@ const createCube = function (color=0x00ff00) {
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const material = new THREE.MeshBasicMaterial({ color: color });
     const cube = new THREE.Mesh(geometry, material);
-    // window.cube = cube;
     cube.scale.set(.5, .5, .5);
-    // cube.position.x=-5.2;
-    // cube.position.y=-5.2;
     cube.position.set(0, 0, -5)
     return cube
 }
@@ -26,21 +23,12 @@ class SceneModal extends Component {
         this.scene.background = new THREE.Color( 'white' );
         this.renderer = createRenderer();
         this.renderer.setSize((window.innerWidth*.35), (window.innerHeight*.9));
-		this.camera = new THREE.PerspectiveCamera(
-			50,
-			(window.innerWidth*.35) / (window.innerHeight*.9),
-			0.1,
-			1000,
-		);
-
-
-        const Light = new Lights(this.scene, this.renderer);
-		// Light.setUpNormalLights();
-		Light.setUpEnvMapLights();
+		this.camera = new THREE.PerspectiveCamera(50, (window.innerWidth*.35) / (window.innerHeight*.9), 0.1, 1000);
         this.myRef = React.createRef();
-
+        this.lastMPos = {x: 0, y: 0};
         this.canRotate = false;
-
+        this.item = props?.item;
+        this.closeModal = props?.closeModal;
     }
 
     rotateObject = (e) => {
@@ -51,11 +39,6 @@ class SceneModal extends Component {
                     //calculate how far the mouse has moved
                     var deltaX = this.lastMPos.x - e.touches[0].clientX;
                     var deltaY = this.lastMPos.y - e.touches[0].clientY;
-    
-                    // var ex = deltaX/deltaY *.01;
-                    // if (ex && ex!=Infinity && ex!=-Infinity){
-                    //     this.item.rotation.z -=  ex;
-                    // }
     
                     if (this.first) {
                         deltaX = 0;
@@ -88,10 +71,6 @@ class SceneModal extends Component {
                     //rotate your object accordingly
                     this.item.rotation.x -= deltaY * 0.01;
                     this.item.rotation.y -= deltaX * 0.01;
-                    // var ex = deltaX/deltaY *.01;
-                    // if (ex && ex!=Infinity && ex!=-Infinity){
-                    //     this.item.rotation.z -=  ex;
-                    // }
                 }
     
                 //save current mouse Position for next time
@@ -103,15 +82,12 @@ class SceneModal extends Component {
     
     }
 
-
 	setZoom = (fov) => {
 		this.camera.fov = fov;
 		if (this.camera.fov < 10) this.camera.fov = 10;
 		if (this.camera.fov > 50) this.camera.fov = 50;
 		this.camera.updateProjectionMatrix();
 	}
-
-
 
     mouseWheelHandler = (e) => {
 		const fovDelta = e.deltaY;
@@ -132,52 +108,26 @@ class SceneModal extends Component {
 
 	handleMouseUp = () => {
 		this.canRotate = false;
-	};
-
-
-    
+	};    
 
 
     componentDidMount() {
 
-        this.renderer.domElement.addEventListener(
-            'wheel',
-            this.mouseWheelHandler,
-            { passive: true },
-        );
+        const Light = new Lights(this.scene, this.renderer);
+		Light.setUpEnvMapLights();
 
-        this.renderer.domElement.addEventListener(
-            'mousemove',
-            this.handleRendererMouseMove,
-            true,
-        );
-
+        this.renderer.domElement.addEventListener('wheel', this.mouseWheelHandler, { passive: true });
+        this.renderer.domElement.addEventListener('mousemove', this.handleRendererMouseMove, true);
         this.renderer.domElement.addEventListener('mouseup',this.handleMouseUp, true);
         this.renderer.domElement.addEventListener('mousedown',this.handleMouseDown, true);
 
-        this.lastMPos = {
-			x: 0,
-			y: 0,
-		};
-
-        window.setItem = this.setItem;
-
-        // window.cube = createCube('red');
-
-
-
-
+        this.setItem(this.item);
 
         this.myRef.current.appendChild(this.renderer.domElement);
         
         this.cube = createCube();
-        // this.setItem(this.cube);
-
+        
         this.animate();
-
-    }
-
-    componentWillUnmount() {
 
     }
 
@@ -200,9 +150,6 @@ class SceneModal extends Component {
     setItem = (item) => {
         this.memoOriginalPosition(item);
         this.memoOriginalRotation(item);
-        // if(this.scene.children.includes(this.item)) this.scene.remove(this.item);
-        // debugger;
-        this.item = item;
         this.setItemPosition();
         this.setItemRotation();
         this.scene.add(item);
@@ -212,8 +159,6 @@ class SceneModal extends Component {
         this.scene.remove(this.item);
         this.item.position.copy(this.originalPosition);
         this.item.rotation.copy(this.originalRotation);
-        // this.item.position = this.originalPosition;
-        // this.item.rotation = this.originalRotation;
         window.mainScene.add(this.item)
     }
 
@@ -227,6 +172,10 @@ class SceneModal extends Component {
         this.renderer.render(this.scene, this.camera)
     }
 
+    addToCart = () => {
+
+    }
+
     render() {
         return (
             <div
@@ -235,7 +184,6 @@ class SceneModal extends Component {
                 width: '100%',
                 height: '100%',
                 backdropFilter: `blur(10px)`,
-                visibility:'hidden',
                 WebkitBackdropFilter: `blur(10px)`,
                 top:'0px',
                 left:'0px',
@@ -244,7 +192,6 @@ class SceneModal extends Component {
                 <div
                 id='modal'
                 style={{
-                    visibility:'hidden',
                     left: '50%',
                     top: '50%',
                     transform: 'translate(-50%, -50%)',
@@ -256,8 +203,7 @@ class SceneModal extends Component {
                             onClick={(e) => {
                                 e.stopPropagation();
                                 this.unSetItem();
-                                document.querySelector('#modal').style.visibility='hidden';
-                                document.querySelector('#blur').style.visibility='hidden';
+                                this.closeModal();
                             }}
                             style={{
                                 position: 'absolute',
@@ -280,7 +226,7 @@ class SceneModal extends Component {
                             ></img>
                         </div>
 
-                        <CartButton/>
+                        {/* <CartButton onClick={addToCart}/> */}
                         
                 </div>
             </div>
