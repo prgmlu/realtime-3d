@@ -10,6 +10,7 @@ import CollisionDetection from './CollisionDetection';
 import {ItemCollection, getRaycastIntersects} from './items';
 import defaultChar from './static/glb_files/defaultChar.glb';
 import Animations from './static/glb_files/animations.glb';
+import ProductsCart from './ui/ProductsCart.jsx';
 import UI_Layer from './ui/UI_Layer';
 import SceneModal from './SceneModal';
 
@@ -27,8 +28,9 @@ const createBoundingObj = (position) => {
 
 
 export default class Store extends Component {
-	constructor(){
-		super()
+	constructor(props){
+		super(props)
+		this.reduxStore = props?.store;
 		this.canvas = {};
 		this.renderer = {};
 		this.scene = new THREE.Scene();
@@ -44,6 +46,7 @@ export default class Store extends Component {
 	state = {
 		showModal : false,
 		modalItem : {},
+		cartItems : [],
 	}
 
 	loadAvatar = (avatar) => {
@@ -114,9 +117,26 @@ export default class Store extends Component {
 		}
 	}
 
+	closeModal = () => {
+		// let cartItems = this.state.cartItems;
+		this.setState({
+			showModal:false,
+			modalItem:{},
+			cartItems: this.state.cartItems,
+		})
+	}
+
+	addToCart = (itemId) => {
+		let cartItems = this.state.cartItems;
+		cartItems.push(itemId);
+		this.setState({
+			cartItems: cartItems,
+			showModal: this.state.showModal,
+			modalItem: this.state.modalItem,
+		})
+	}
+
 	componentDidMount() {
-
-
 		window.addEventListener('click', (e)=>{
 			var hit = getRaycastIntersects(e,this.camera);
 			if (
@@ -153,9 +173,7 @@ export default class Store extends Component {
 					})
 						//
 					}, this);
-				// this.camera.position.copy(point).normalize().multiplyScalar(-camDistance);
 			}
-			// alert(hit)
 		})
 		
 
@@ -229,10 +247,11 @@ export default class Store extends Component {
 	render() {
 		return (
 			<div className="Store" style={{width:window.innerWidth, height:window.innerHeight, overflow:'hidden'}}>
-				{this.state.showModal && <SceneModal item={this.state.modalItem} closeModal={()=>{this.setState({showModal:false,modalItem:{}})}}/>}
+				{this.state.showModal && <SceneModal item={this.state.modalItem} closeModal={this.closeModal}/>}
 				<canvas id='webgl'></canvas>
 				{USE_AVATAR_CREATOR && <AvatarCreator/>}
 				<UI_Layer/>
+				<ProductsCart store={this.reduxStore} cartItems={this.state.cartItems} addToCart={this.addToCart}/>
 			</div>
 		)
 	}

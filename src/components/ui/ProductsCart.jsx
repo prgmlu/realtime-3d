@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
+import { connect } from "react-redux";
 import './ProductsCart.css';
 
 const cartIcon = "https://cdn.obsess-vr.com/Cart_Icon.png";
 
-export default class ProductsCart extends Component {
-	constructor(){
-		super()
-        this.productsNumber = 0;
+class ProductsCart extends Component {
+	constructor(props){
+		super(props)
+        this.cartItems = props?.cartItems;
 	}
 
 	render() {
@@ -14,9 +15,19 @@ export default class ProductsCart extends Component {
             <div className='products-cart-button'>
                 <img className='products-cart-icon' src={cartIcon} />
                 <div className='products-cart-number'>
-                    <p>{this.productsNumber}</p>
+                    <p>{this.cartItems?.length || 0}</p>
                 </div>
             </div>
         )
     }
 }
+
+const mapStateToProps = (state, ownProps) => {
+    const { cartData } = state
+    if(cartData.item != 0){
+        ownProps.addToCart(cartData.item);
+    }
+    return { cartData }
+}
+
+export default connect(mapStateToProps)(ProductsCart);

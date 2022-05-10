@@ -172,10 +172,6 @@ class SceneModal extends Component {
         this.renderer.render(this.scene, this.camera)
     }
 
-    addToCart = () => {
-
-    }
-
     render() {
         return (
             <div
@@ -226,7 +222,7 @@ class SceneModal extends Component {
                             ></img>
                         </div>
 
-                        {/* <CartButton onClick={addToCart}/> */}
+                        <CartButton itemId={this.item.itemId}/>
                         
                 </div>
             </div>

@@ -3,18 +3,16 @@ import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 /**  Reducers * */
-import scenesReducer from './scenesReducer';
-import modalReducer from './modalsReducer';
 import componentConfigReducer from './componentConfigReducer';
+import cartReducer from './cartReducer'
 import storeDataReducer from './storeDataReducer';
 import functionsReducer from './functionsReducer';
 import analyticsReducer from './analyticsReducer';
 import accessibilityReducer from './accessibilityReducer';
 
 const staticReducers = {
-	scenes: scenesReducer,
+	cartData: cartReducer,
 	storeData: storeDataReducer,
-	modalData: modalReducer,
 	componentConfig: componentConfigReducer,
 	shareableFunctions: functionsReducer,
 	analytics: analyticsReducer,

@@ -146,6 +146,7 @@ export class ItemCollection {
 	this.items.map((item, indx)=>{
 		//the item fields are url, position, rotation
 		this.loader.load(item.url,(data) => {
+            data.scene.itemId = item.id;
             data.scene.position.copy(item.position)
             data.scene.rotation.fromArray(item.rotation)
             data.scene.traverse((i)=>{
