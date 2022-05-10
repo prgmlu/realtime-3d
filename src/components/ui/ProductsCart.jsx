@@ -8,11 +8,12 @@ class ProductsCart extends Component {
 	constructor(props){
 		super(props)
         this.cartItems = props?.cartItems;
+        this.showModal = props?.showModal;
 	}
 
 	render() {
 		return (
-            <div className='products-cart-button'>
+            <div className='products-cart-button' onClick={this.showModal}>
                 <img className='products-cart-icon' src={cartIcon} />
                 <div className='products-cart-number'>
                     <p>{this.cartItems?.length || 0}</p>
@@ -25,7 +26,8 @@ class ProductsCart extends Component {
 const mapStateToProps = (state, ownProps) => {
     const { cartData } = state
     if(cartData.item != 0){
-        ownProps.addToCart(cartData.item);
+        let itemNum = ownProps.cartItems.length + 1;
+        ownProps.addToCart({itemID:cartData.item, itemNum:itemNum});
     }
     return { cartData }
 }

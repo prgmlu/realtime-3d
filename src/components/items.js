@@ -2,10 +2,15 @@ import * as THREE from 'three'
 import oldRoomObject from './static/glb_files/walls.glb'
 import newRoomObject from './static/glb_files/Armani_GlowRoomV00011.glb'
 import shoes from './static/glb_files/shoes.glb'
+import shoesImg from './static/glb_imgs/shoes.png'
 import shoes2 from './static/glb_files/shoes_2.glb'
+import shoes2Img from './static/glb_imgs/shoes_2.png'
 import smallBag from './static/glb_files/small_bag.glb'
+import smallBagImg from './static/glb_imgs/small_bag.png'
 import smallBag2 from './static/glb_files/small_bag_2.glb'
+import smallBag2Img from './static/glb_imgs/small_bag_2.png'
 import bag from './static/glb_files/bag.glb'
+import bagImg from './static/glb_imgs/bag.png'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 
 
@@ -44,6 +49,7 @@ export class ItemCollection {
             {
                 id:1,
                 url:shoes,
+                img:shoesImg,
                 position: {
                     x:USE_NEW_STORE_WALLS?2:-4.2,
                     y:1.25,
@@ -58,6 +64,7 @@ export class ItemCollection {
             {
                 id:2,
                 url:shoes2,
+                img:shoes2Img,
                 position: {
                     x:USE_NEW_STORE_WALLS?1:3.8,
                     y:1.25,
@@ -72,6 +79,7 @@ export class ItemCollection {
             {
                 id:3,
                 url:bag,
+                img:bagImg,
                 position: {
                     x:USE_NEW_STORE_WALLS?0:3.6,
                     y:1.2,
@@ -86,6 +94,7 @@ export class ItemCollection {
             {
                 id:4,
                 url:smallBag,
+                img:smallBagImg,
                 position: {
                     x:USE_NEW_STORE_WALLS?-2:-4.2,
                     y:1.25,
@@ -100,6 +109,7 @@ export class ItemCollection {
             {
                 id:5,
                 url:smallBag2,
+                img:smallBag2Img,
                 position: {
                     x:USE_NEW_STORE_WALLS?-1:-4.2,
                     y:1.25,

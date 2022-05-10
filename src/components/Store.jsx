@@ -13,6 +13,7 @@ import Animations from './static/glb_files/animations.glb';
 import ProductsCart from './ui/ProductsCart.jsx';
 import UI_Layer from './ui/UI_Layer';
 import SceneModal from './SceneModal';
+import CartModal from './ui/CartModal';
 
 
 const  USE_AVATAR_CREATOR = false;
@@ -44,8 +45,9 @@ export default class Store extends Component {
 		this.animations = this.loader.load(Animations, (data) => {this.animations = data.animations});
 	}
 	state = {
-		showModal : false,
+		sceneModal : false,
 		modalItem : {},
+		cartModal : false,
 		cartItems : [],
 	}
 
@@ -117,23 +119,19 @@ export default class Store extends Component {
 		}
 	}
 
-	closeModal = () => {
-		// let cartItems = this.state.cartItems;
-		this.setState({
-			showModal:false,
-			modalItem:{},
-			cartItems: this.state.cartItems,
-		})
+	closeSceneModal = () => {
+		this.setState({sceneModal:false, modalItem:{}});
 	}
 
-	addToCart = (itemId) => {
+	addToCart = (itemData) => {
 		let cartItems = this.state.cartItems;
-		cartItems.push(itemId);
-		this.setState({
-			cartItems: cartItems,
-			showModal: this.state.showModal,
-			modalItem: this.state.modalItem,
-		})
+		cartItems.push(itemData);
+		this.setState({cartItems: cartItems});
+	}
+
+	setCartModal = () => {
+		let showCartModal = !this.state.cartModal;
+		this.setState({cartModal : showCartModal});
 	}
 
 	componentDidMount() {
@@ -168,7 +166,7 @@ export default class Store extends Component {
 					.start()
 					.onComplete(() => {
 					this.setState({
-						showModal : true,
+						sceneModal : true,
 						modalItem : clickedItem,
 					})
 						//
@@ -247,11 +245,12 @@ export default class Store extends Component {
 	render() {
 		return (
 			<div className="Store" style={{width:window.innerWidth, height:window.innerHeight, overflow:'hidden'}}>
-				{this.state.showModal && <SceneModal item={this.state.modalItem} closeModal={this.closeModal}/>}
+				{this.state.sceneModal && <SceneModal item={this.state.modalItem} closeModal={this.closeSceneModal}/>}
 				<canvas id='webgl'></canvas>
 				{USE_AVATAR_CREATOR && <AvatarCreator/>}
 				<UI_Layer/>
-				<ProductsCart store={this.reduxStore} cartItems={this.state.cartItems} addToCart={this.addToCart}/>
+				<ProductsCart store={this.reduxStore} cartItems={this.state.cartItems} addToCart={this.addToCart} showModal={this.setCartModal}/>
+				{this.state.cartModal && <CartModal storeItems={this.items.items} cartItems={this.state.cartItems} closeModal={this.setCartModal}/>}
 			</div>
 		)
 	}

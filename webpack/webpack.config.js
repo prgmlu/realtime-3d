@@ -23,7 +23,7 @@ module.exports = (options) => {
 		module: {
 			rules: [
 				{
-					test: /\.(glb|jpg|gltf)$/,
+					test: /\.(glb|jpg|gltf|png)$/,
 					use:
 					[
 						{
