@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import oldRoomObject from './static/glb_files/walls.glb'
-import newRoomObject from './static/glb_files/Armani_GlowRoomV00011.glb'
+// import newRoomObject from './static/glb_files/Armani_GlowRoomV00011.glb'
 import shoes from './static/glb_files/shoes.glb'
 import shoesImg from './static/glb_imgs/shoes.png'
 import shoes2 from './static/glb_files/shoes_2.glb'
