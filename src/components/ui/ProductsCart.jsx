@@ -26,8 +26,7 @@ class ProductsCart extends Component {
 const mapStateToProps = (state, ownProps) => {
     const { cartData } = state
     if(cartData.item != 0){
-        let itemNum = ownProps.cartItems.length + 1;
-        ownProps.addToCart({itemID:cartData.item, itemNum:itemNum});
+        ownProps.addToCart({itemID:cartData.item, itemNum:ownProps.itemNum});
     }
     return { cartData }
 }

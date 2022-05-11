@@ -6,7 +6,31 @@ export default class CartModal extends Component {
         super(props);
         this.cartItems = props?.cartItems;
         this.closeModal = props?.closeModal;
+        this.removeFromCart = props?.removeFromCart;
         this.storeItems = props?.storeItems;
+        this.removedItems = [];
+    }
+    state = {
+        cartItems : [],
+    }
+
+    onRemove = (e) => {
+        let currentItems = [];
+        for(let i=0; i<this.state.cartItems.length; i++){
+            if(this.state.cartItems[i].itemNum != e.target.id){
+                currentItems.push(this.state.cartItems[i]);
+            }
+        }
+		this.setState({cartItems: currentItems});
+        this.removedItems.push(e.target.id);
+    }
+
+    componentDidMount(){
+        this.setState({cartItems : this.cartItems})
+    }
+
+    componentWillUnmount(){
+        this.removeFromCart(this.removedItems);
     }
 
     render() {
@@ -28,9 +52,16 @@ export default class CartModal extends Component {
                             ></img>
                     </div>
                     <div id='cartContainer'>
-                        {this.cartItems.map((item) => {return(
-
-                            <img style={{width:'200px', height:'200px'}} id={item.itemNum} src={this.storeItems.filter(storeItem => {return storeItem.id === item.itemID})[0].img}/>
+                        {this.state.cartItems.map((item) => {return(
+                            <div className='cartItem'>
+                                <img style={{width:'200px', height:'200px'}}
+                                        id={item.itemNum}
+                                        src={this.storeItems.filter(storeItem => {return storeItem.id === item.itemID})[0].img}
+                                />
+                                <p>Product Name</p>
+                                <p>Product Price</p>
+                                <button type='button' id={item.itemNum} className='cartRemoveButton' onClick={this.onRemove}>Remove</button>
+                            </div>
                         )})}
                     </div>
                 </div>
