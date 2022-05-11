@@ -6,9 +6,8 @@ export default class CartModal extends Component {
         super(props);
         this.cartItems = props?.cartItems;
         this.closeModal = props?.closeModal;
-        this.removeFromCart = props?.removeFromCart;
+        this.setCartItems = props?.setCartItems;
         this.storeItems = props?.storeItems;
-        this.removedItems = [];
     }
     state = {
         cartItems : [],
@@ -21,16 +20,12 @@ export default class CartModal extends Component {
                 currentItems.push(this.state.cartItems[i]);
             }
         }
+        this.setCartItems(currentItems);
 		this.setState({cartItems: currentItems});
-        this.removedItems.push(e.target.id);
     }
 
     componentDidMount(){
         this.setState({cartItems : this.cartItems})
-    }
-
-    componentWillUnmount(){
-        this.removeFromCart(this.removedItems);
     }
 
     render() {

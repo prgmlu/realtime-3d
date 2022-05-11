@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { setCartData } from '../../../redux_stores/cartReducer/actions';
 import './CartButton.css';
 
 const cartIcon = "https://cdn.obsess-vr.com/Cart_Icon.png";
 
-class CartButton extends Component {
+export default class CartButton extends Component {
 	constructor(props){
 		super(props)
+        this.itemId = props?.itemId;
+        this.addToCart = props?.addToCart;
 	}
 
     handleAddToCart = () => {
-        this.props.setCartData(this.props.itemId)
+        this.addToCart(this.itemId);
       }
 
 	render() {
@@ -22,5 +22,3 @@ class CartButton extends Component {
         )
     }
 }
-
-export default connect(null, { setCartData })(CartButton)

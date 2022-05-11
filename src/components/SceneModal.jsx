@@ -29,6 +29,7 @@ class SceneModal extends Component {
         this.canRotate = false;
         this.item = props?.item;
         this.closeModal = props?.closeModal;
+        this.addToCart = props?.addToCart;
     }
 
     rotateObject = (e) => {
@@ -222,7 +223,7 @@ class SceneModal extends Component {
                             ></img>
                         </div>
 
-                        <CartButton itemId={this.item.itemId}/>
+                        <CartButton itemId={this.item.itemId} addToCart={this.addToCart}/>
                         
                 </div>
             </div>

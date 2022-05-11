@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import { connect } from "react-redux";
 import './ProductsCart.css';
 
 const cartIcon = "https://cdn.obsess-vr.com/Cart_Icon.png";
 
-class ProductsCart extends Component {
+export default class ProductsCart extends Component {
 	constructor(props){
 		super(props)
         this.cartItems = props?.cartItems;
@@ -22,13 +21,3 @@ class ProductsCart extends Component {
         )
     }
 }
-
-const mapStateToProps = (state, ownProps) => {
-    const { cartData } = state
-    if(cartData.item != 0){
-        ownProps.addToCart({itemID:cartData.item, itemNum:ownProps.itemNum});
-    }
-    return { cartData }
-}
-
-export default connect(mapStateToProps)(ProductsCart);

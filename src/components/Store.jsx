@@ -124,25 +124,15 @@ export default class Store extends Component {
 		this.setState({sceneModal:false, modalItem:{}});
 	}
 
-	addToCart = (itemData) => {
+	addToCart = (itemID) => {
 		let cartItems = this.state.cartItems;
+		cartItems.push({itemID:itemID, itemNum:this.state.itemNum});
 		let newItemNum = this.state.itemNum+1;
-		cartItems.push(itemData);
 		this.setState({cartItems: cartItems, itemNum: newItemNum});
 	}
 
-	removeFromCart = (removedItems) => {
-		let currentItems = [];
-		for(let i=0; i<removedItems.length; i++){
-			console.log("REMOVE")
-			for(let j=0; j<this.state.cartItems.length; j++){
-				if(this.state.cartItems[j].itemNum != removedItems){
-					currentItems.push(this.state.cartItems);
-				}
-			}
-		}
-		console.log(currentItems)
-		this.setState({cartItems: currentItems});
+	setCartItems = (items) => {
+		this.setState({cartItems: items});
 	}
 
 	setCartModal = () => {
@@ -261,16 +251,16 @@ export default class Store extends Component {
 	render() {
 		return (
 			<div className="Store" style={{width:window.innerWidth, height:window.innerHeight, overflow:'hidden'}}>
-				{this.state.sceneModal && <SceneModal item={this.state.modalItem} closeModal={this.closeSceneModal}/>}
+				{this.state.sceneModal && <SceneModal item={this.state.modalItem} closeModal={this.closeSceneModal} addToCart={this.addToCart}/>}
 				<canvas id='webgl'></canvas>
 				{USE_AVATAR_CREATOR && <AvatarCreator/>}
 				<UI_Layer/>
-				<ProductsCart store={this.reduxStore} cartItems={this.state.cartItems} addToCart={this.addToCart} showModal={this.setCartModal} itemNum={this.state.itemNum}/>
+				<ProductsCart cartItems={this.state.cartItems} showModal={this.setCartModal}/>
 				{this.state.cartModal && <CartModal 
 											storeItems={this.items.items}
 											cartItems={this.state.cartItems}
 											closeModal={this.setCartModal}
-											removeFromCart={this.removeFromCart}
+											setCartItems={this.setCartItems}
 										/>}
 			</div>
 		)
