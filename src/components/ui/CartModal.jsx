@@ -30,7 +30,8 @@ export default class CartModal extends Component {
                     height: '75%',
                     left: '50%',
                     top: '50%',
-                    backgroundColor: 'white',
+                    backgroundColor: 'rgba(.5,.5,.5,.5)',
+                    borderRadius:'30px',
                     transform: 'translate(-50%, -50%)',
                     position: 'absolute',
                 }}>

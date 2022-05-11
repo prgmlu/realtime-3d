@@ -20,7 +20,7 @@ class SceneModal extends Component {
     constructor(props) {
         super(props);
         this.scene = createScene();
-        this.scene.background = new THREE.Color( 'white' );
+        // this.scene.background = new THREE.Color( 'white' );
         this.renderer = createRenderer();
         this.renderer.setSize((window.innerWidth*.35), (window.innerHeight*.9));
 		this.camera = new THREE.PerspectiveCamera(50, (window.innerWidth*.35) / (window.innerHeight*.9), 0.1, 1000);
