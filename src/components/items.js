@@ -49,6 +49,8 @@ export class ItemCollection {
             {
                 id:1,
                 url:shoes,
+                name: 'Black Shoes',
+                price: '99.99$',
                 img:shoesImg,
                 position: {
                     x:USE_NEW_STORE_WALLS?2:-4.2,
@@ -64,6 +66,8 @@ export class ItemCollection {
             {
                 id:2,
                 url:shoes2,
+                name: 'Sports Shoes',
+                price: '79.99$',
                 img:shoes2Img,
                 position: {
                     x:USE_NEW_STORE_WALLS?1:3.8,
@@ -79,6 +83,8 @@ export class ItemCollection {
             {
                 id:3,
                 url:bag,
+                name: 'Red Backpack',
+                price: '14.99$',
                 img:bagImg,
                 position: {
                     x:USE_NEW_STORE_WALLS?0:3.6,
@@ -94,6 +100,8 @@ export class ItemCollection {
             {
                 id:4,
                 url:smallBag,
+                name: 'Red Hand Bag',
+                price: '49.99$',
                 img:smallBagImg,
                 position: {
                     x:USE_NEW_STORE_WALLS?-2:-4.2,
@@ -109,6 +117,8 @@ export class ItemCollection {
             {
                 id:5,
                 url:smallBag2,
+                name: 'Black Hand Bag',
+                price: '49.99$',
                 img:smallBag2Img,
                 position: {
                     x:USE_NEW_STORE_WALLS?-1:-4.2,

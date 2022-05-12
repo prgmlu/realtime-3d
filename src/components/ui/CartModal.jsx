@@ -48,13 +48,13 @@ export default class CartModal extends Component {
                     </div>
                     <div id='cartContainer'>
                         {this.state.cartItems.map((item) => {return(
-                            <div className='cartItem'>
+                            <div className='cartItem' key={item.itemNum}>
                                 <img style={{width:'200px', height:'200px'}}
                                         id={item.itemNum}
                                         src={this.storeItems.filter(storeItem => {return storeItem.id === item.itemID})[0].img}
                                 />
-                                <p>Product Name</p>
-                                <p>Product Price</p>
+                                <p>{this.storeItems.filter(storeItem => {return storeItem.id === item.itemID})[0].name}</p>
+                                <p>{this.storeItems.filter(storeItem => {return storeItem.id === item.itemID})[0].price}</p>
                                 <button type='button' id={item.itemNum} className='cartRemoveButton' onClick={this.onRemove}>Remove</button>
                             </div>
                         )})}
