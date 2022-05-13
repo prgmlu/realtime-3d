@@ -259,7 +259,6 @@ export default class Store extends Component {
 				{this.state.cartModal && <CartModal 
 											storeItems={this.items.items}
 											cartItems={this.state.cartItems}
-											closeModal={this.setCartModal}
 											setCartItems={this.setCartItems}
 										/>}
 			</div>

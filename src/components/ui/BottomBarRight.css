@@ -1,15 +1,15 @@
 #bottomBarRight {
     position: fixed;
     z-index: 10;
-    bottom: 0.25em;
-    right: 0;
+    bottom: 1em;
+    left: 0;
     font-weight: 400;
     font-size: 12px;
 }
 
 #bottomBarRightMenuContainer {
-    float: right;
-    margin-right: 0.5em;
+    float: left;
+    margin-left: 0.5em;
 }
 
 #bottomBarRight .hoverable div,
@@ -31,5 +31,4 @@
 
 #bottomBarObsessLogoWrapper {
     position: relative;
-    bottom: -0.2em;
 }

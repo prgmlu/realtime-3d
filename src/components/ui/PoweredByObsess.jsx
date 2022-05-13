@@ -51,16 +51,17 @@ class PoweredByObsess extends Component {
     }
 
     render() {
-        return (<div style={{float: 'right', marginRight: '0.5em'}}>
+        return (<div style={{float: 'left', marginLeft: '0.5em', height: '16px'}}>
             <div
+                style={{height: '100%'}}
                 className='hoverable'
                 onClick={this.logoOnClick}
                 onTouchEnd={this.logoOnTouchEnd}
             >
-                <div>
-                    <p style={{color:'red', cursor:'pointer'}}>Powered by</p>
+                <div style={{height: '100%'}}>
+                    <p style={{color:'white', cursor:'pointer', lineHeight: '16px'}}>Powered by</p>
                 </div>
-                <div id='bottomBarObsessLogoWrapper'>
+                <div id='bottomBarObsessLogoWrapper' style={{height: '100%'}}>
                     <BaseImage
                         src={this.state.obsessLogoSrc}
                         style={obsessLogoStyle}

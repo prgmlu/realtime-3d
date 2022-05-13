@@ -22,8 +22,8 @@ class SceneModal extends Component {
         this.scene = createScene();
         // this.scene.background = new THREE.Color( 'white' );
         this.renderer = createRenderer();
-        this.renderer.setSize((window.innerWidth*.35), (window.innerHeight*.9));
-		this.camera = new THREE.PerspectiveCamera(50, (window.innerWidth*.35) / (window.innerHeight*.9), 0.1, 1000);
+        this.renderer.setSize((window.innerWidth*.35), (window.innerHeight*.8));
+		this.camera = new THREE.PerspectiveCamera(50, (window.innerWidth*.35) / (window.innerHeight*.8), 0.1, 1000);
         this.myRef = React.createRef();
         this.lastMPos = {x: 0, y: 0};
         this.canRotate = false;
@@ -189,6 +189,8 @@ class SceneModal extends Component {
                 <div
                 id='modal'
                 style={{
+                    backgroundColor: '#FFFFFF',
+                    opacity: '60%',
                     left: '50%',
                     top: '50%',
                     transform: 'translate(-50%, -50%)',
@@ -204,17 +206,14 @@ class SceneModal extends Component {
                             }}
                             style={{
                                 position: 'absolute',
-                                background: '#340c0c',
-                                borderRadius: '50%',
                                 cursor: 'pointer',
-                                margin: 25 + 'px',
                                 zIndex: 2,
-                                right: '0',
-                                top: '0',
+                                right: '-15px',
+                                top: '-15px',
                             }}
                         >
                             <img
-                                src="https://cdn.obsess-vr.com/modal-close-icon-normal.png"
+                                src="https://cdn.obsess-vr.com/Close-button.png"
                                 style={{
                                     maxWidth: '100%',
                                     width: '2.8em',

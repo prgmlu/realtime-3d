@@ -14,7 +14,7 @@ class Logo extends Component {
 		super(props);
 		this.onClick = this.onClick.bind(this);
 		this.state = {
-			imageSrc: 'https://cdn.obsessvr.com/coco/coco-header-logo-blue.png',
+			imageSrc: 'https://cdn.obsess-vr.com/Obsess-color-logo-32.png',
 			redirectUrl: '',
 		};
 	}

@@ -5,7 +5,6 @@ export default class CartModal extends Component {
     constructor(props) {
         super(props);
         this.cartItems = props?.cartItems;
-        this.closeModal = props?.closeModal;
         this.setCartItems = props?.setCartItems;
         this.storeItems = props?.storeItems;
     }
@@ -30,35 +29,29 @@ export default class CartModal extends Component {
 
     render() {
         return (
-            <div id='cartBlur'>
-                <div id='cartModal'>
-                    <div id='closeButton'
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            this.closeModal();
-                        }}>
-                            <img
-                                src="https://cdn.obsess-vr.com/modal-close-icon-normal.png"
-                                style={{
-                                    maxWidth: '100%',
-                                    width: '2.8em',
-                                    float: 'right',
-                                }}
-                            ></img>
-                    </div>
-                    <div id='cartContainer'>
-                        {this.state.cartItems.map((item) => {return(
-                            <div className='cartItem' key={item.itemNum}>
-                                <img style={{width:'200px', height:'200px'}}
-                                        id={item.itemNum}
-                                        src={this.storeItems.filter(storeItem => {return storeItem.id === item.itemID})[0].img}
-                                />
-                                <p>{this.storeItems.filter(storeItem => {return storeItem.id === item.itemID})[0].name}</p>
-                                <p>{this.storeItems.filter(storeItem => {return storeItem.id === item.itemID})[0].price}</p>
-                                <button type='button' id={item.itemNum} className='cartRemoveButton' onClick={this.onRemove}>Remove</button>
+            <div id='cartModal'>
+                <img src='https://cdn.obsess-vr.com/Cart-modal.png' style={{height: '100%'}}/>
+                <p style={{position: 'absolute', top:'30px', left: '20px', fontWeight: 'bold', fontSize: 'x-large'}}>Your Bag ({this.props.cartItems.length})</p>
+                <div id='cartContainer'>
+                    {this.state.cartItems.map((item) => {return(
+                        <>
+                        <div className='cartItem' key={item.itemNum}>
+                            <img style={{width:'200px', height:'200px'}}
+                                    id={item.itemNum}
+                                    src={this.storeItems.filter(storeItem => {return storeItem.id === item.itemID})[0].img}
+                            />
+                            <div className='productDetails'>
+                                <p style={{fontWeight: 'bold', fontSize: 'x-large', margin: '20px auto 0 auto'}}>{this.storeItems.filter(storeItem => {return storeItem.id === item.itemID})[0].name}</p>
+                                <p style={{fontSize: 'large', marginTop: '0'}}>{this.storeItems.filter(storeItem => {return storeItem.id === item.itemID})[0].price}</p>
                             </div>
-                        )})}
-                    </div>
+                            <button type='button' id={item.itemNum} className='cartRemoveButton' onClick={this.onRemove}>Remove</button>
+                        </div>
+                        <hr style={{width:'90%', border: '1px solid #000000', alignSelf: 'center  '}}></hr>
+                        </>
+                    )})}
+                </div>
+                <div className='checkoutButton'>
+                    <p style={{fontWeight: 'bold', fontSize: 'x-large', margin: '0'}}>Check out</p>
                 </div>
             </div>
         );

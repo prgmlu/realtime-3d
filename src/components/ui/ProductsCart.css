@@ -1,5 +1,6 @@
 .products-cart-button {
     position: absolute;
+    text-align: center;
     top: 10px;
     right: 10px;
 }
@@ -11,13 +12,10 @@
 }
 
 .products-cart-number {
-    width: 40px;
-    height: 40px;
+    position: absolute;
+    top: 55%;
     left: 50%;
-    transform: translate(40%, 0); 
-    background-color: white;
-    border-radius: 50%;
-    text-align: center;
+    transform: translate(-50%, -50%);
     font-size: large;
-    line-height: 40px;
+    font-weight: bold;
 }

@@ -11,7 +11,7 @@ class BottomBarRight extends Component {
 
     render() {
         return (
-            <div id='bottomBarRight' style={{ bottom: '0.25em'}}>             
+            <div id='bottomBarRight'>             
                 <MusicController/>         
                 <PoweredByObsess/>                         
             </div>
