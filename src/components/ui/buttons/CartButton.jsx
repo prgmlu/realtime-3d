@@ -17,7 +17,7 @@ export default class CartButton extends Component {
 	render() {
 		return (
             <div className='cart-button' onClick={this.handleAddToCart}>
-                <img className='cart-icon' src={cartIcon} />
+                <p style={{lineHeight:'50px', fontSize:'large', fontWeight:'bold'}}>Add to cart</p>
             </div>
         )
     }

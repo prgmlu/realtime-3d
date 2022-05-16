@@ -3,6 +3,7 @@ import Lights from './Lights';
 import {createScene, createRenderer} from './threeHelpers'
 import * as THREE from 'three'
 import CartButton from './ui/buttons/CartButton';
+import './SceneModal.css'
 
 
 const ITEM_POS = [0,0,-1.5];
@@ -175,28 +176,8 @@ class SceneModal extends Component {
 
     render() {
         return (
-            <div
-            id='blur'
-            style={{
-                width: '100%',
-                height: '100%',
-                backdropFilter: `blur(10px)`,
-                WebkitBackdropFilter: `blur(10px)`,
-                top:'0px',
-                left:'0px',
-                position: 'absolute',
-            }}>
-                <div
-                id='modal'
-                style={{
-                    backgroundColor: '#FFFFFF',
-                    opacity: '60%',
-                    left: '50%',
-                    top: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    position: 'absolute',
-                }}
-                ref={this.myRef} >
+            <div id='blur'>
+                <div id='modal' ref={this.myRef} >
 
                             <div 
                             onClick={(e) => {

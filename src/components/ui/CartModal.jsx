@@ -35,16 +35,16 @@ export default class CartModal extends Component {
                 <div id='cartContainer'>
                     {this.state.cartItems.map((item) => {return(
                         <>
-                        <div className='cartItem' key={item.itemNum}>
+                        <div className='cartItem' key={item.itemNum} id={item.itemNum}>
                             <img style={{width:'200px', height:'200px'}}
                                     id={item.itemNum}
                                     src={this.storeItems.filter(storeItem => {return storeItem.id === item.itemID})[0].img}
                             />
-                            <div className='productDetails'>
-                                <p style={{fontWeight: 'bold', fontSize: 'x-large', margin: '20px auto 0 auto'}}>{this.storeItems.filter(storeItem => {return storeItem.id === item.itemID})[0].name}</p>
-                                <p style={{fontSize: 'large', marginTop: '0'}}>{this.storeItems.filter(storeItem => {return storeItem.id === item.itemID})[0].price}</p>
+                            <div className='productDetails' id={item.itemNum}>
+                                <p id={item.itemNum} style={{fontWeight: 'bold', fontSize: 'x-large', margin: '20px auto 0 auto'}}>{this.storeItems.filter(storeItem => {return storeItem.id === item.itemID})[0].name}</p>
+                                <p id={item.itemNum} style={{fontSize: 'large', marginTop: '0'}}>{this.storeItems.filter(storeItem => {return storeItem.id === item.itemID})[0].price}</p>
                             </div>
-                            <button type='button' id={item.itemNum} className='cartRemoveButton' onClick={this.onRemove}>Remove</button>
+                            <img id={item.itemNum} className='cartRemoveButton' onClick={this.onRemove} src='https://cdn.obsess-vr.com/Trash.png'></img>
                         </div>
                         <hr style={{width:'90%', border: '1px solid #000000', alignSelf: 'center  '}}></hr>
                         </>
@@ -52,6 +52,7 @@ export default class CartModal extends Component {
                 </div>
                 <div className='checkoutButton'>
                     <p style={{fontWeight: 'bold', fontSize: 'x-large', margin: '0'}}>Check out</p>
+                    <img style={{position:'relative', left:'10px'}} src='https://cdn.obsess-vr.com/Checkout.png'></img>
                 </div>
             </div>
         );
