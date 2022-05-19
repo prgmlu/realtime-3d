@@ -50,6 +50,7 @@ export default class CartModal extends Component {
                         </>
                     )})}
                 </div>
+                <div className='fadeMask'></div>
                 <div className='checkoutButton'>
                     <p style={{fontWeight: 'bold', fontSize: 'x-large', margin: '0'}}>Check out</p>
                     <img style={{position:'relative', left:'10px'}} src='https://cdn.obsess-vr.com/Checkout.png'></img>

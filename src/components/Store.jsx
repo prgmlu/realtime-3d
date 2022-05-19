@@ -78,7 +78,7 @@ export default class Store extends Component {
 				animationsMap.set(a.name, mixer.clipAction(a));
 			});
 
-			this.characterControls = new CharacterControls(model, mixer, animationsMap, this.orbitControls, this.camera, 'Idle',this.collisionDetection );
+			this.characterControls = new CharacterControls(model, mixer, animationsMap, this.orbitControls, this.camera, 'Idle',this.collisionDetection, this.items );
 		});
 	}
 

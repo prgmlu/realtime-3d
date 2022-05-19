@@ -9,7 +9,7 @@ const DIRECTIONS = ['w', 'a', 's', 'd', 'arrowup', 'arrowleft', 'arrowdown', 'ar
 
 export default class CharacterControls {
 
-    constructor(model, mixer, animationsMap, orbitControl, camera, currentAction = 'Idle' , collisionDetection){
+    constructor(model, mixer, animationsMap, orbitControl, camera, currentAction = 'Idle' , collisionDetection, items){
         this.model = model;
         this.boundingGeometry = new Geometry().fromBufferGeometry(this.model.boundingObj.geometry);
         this.mixer = mixer;
@@ -23,6 +23,7 @@ export default class CharacterControls {
         })
         this.orbitControl = orbitControl;
         this.camera = camera;
+        this.items = items;
         this.walkDirection = new THREE.Vector3();
         this.rotateAngle = new THREE.Vector3(0, 1, 0);
         this.rotateQuarternion = new THREE.Quaternion();
@@ -101,6 +102,16 @@ export default class CharacterControls {
             else{
                 this.updateCameraTarget(moveX, moveZ);
                 this.setLastSafePlace();
+            }
+
+            for(let i=0; i<this.items.items.length; i++){
+                if(this.items.items[i].interact){
+                    let itemPos = new THREE.Vector3(this.items.items[i].position.x, this.items.items[i].position.y, this.items.items[i].position.z);
+                    let distFromChar = itemPos.distanceTo(this.model.position);
+                    if(distFromChar < 1.6){
+                        console.log(distFromChar)
+                    }
+                }
             }
         }
     }

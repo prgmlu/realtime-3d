@@ -52,6 +52,7 @@ export class ItemCollection {
                 name: 'Black Shoes',
                 price: '99.99$',
                 img:shoesImg,
+                interact: true,
                 position: {
                     x:USE_NEW_STORE_WALLS?2:-4.2,
                     y:1.25,
@@ -69,6 +70,7 @@ export class ItemCollection {
                 name: 'Sports Shoes',
                 price: '79.99$',
                 img:shoes2Img,
+                interact: true,
                 position: {
                     x:USE_NEW_STORE_WALLS?1:3.8,
                     y:1.25,
@@ -86,6 +88,7 @@ export class ItemCollection {
                 name: 'Red Backpack',
                 price: '14.99$',
                 img:bagImg,
+                interact: true,
                 position: {
                     x:USE_NEW_STORE_WALLS?0:3.6,
                     y:1.2,
@@ -103,6 +106,7 @@ export class ItemCollection {
                 name: 'Red Hand Bag',
                 price: '49.99$',
                 img:smallBagImg,
+                interact: true,
                 position: {
                     x:USE_NEW_STORE_WALLS?-2:-4.2,
                     y:1.25,
@@ -120,6 +124,7 @@ export class ItemCollection {
                 name: 'Black Hand Bag',
                 price: '49.99$',
                 img:smallBag2Img,
+                interact: true,
                 position: {
                     x:USE_NEW_STORE_WALLS?-1:-4.2,
                     y:1.25,
