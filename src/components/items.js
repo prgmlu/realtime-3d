@@ -55,7 +55,7 @@ export class ItemCollection {
                 price: '99.99$',
                 img:shoesImg,
                 interact: true,
-                indicator : this.createIndicator({x:USE_NEW_STORE_WALLS?2:-4.2, y:2.55, z:USE_NEW_STORE_WALLS?-3:0,}),
+                indicator : {},
                 position: {
                     x:USE_NEW_STORE_WALLS?2:-4.2,
                     y:1.25,
@@ -74,7 +74,7 @@ export class ItemCollection {
                 price: '79.99$',
                 img:shoes2Img,
                 interact: true,
-                indicator : this.createIndicator({x:USE_NEW_STORE_WALLS?1:3.8, y:2.55, z:USE_NEW_STORE_WALLS?-3:.7,}),
+                indicator : {},
                 position: {
                     x:USE_NEW_STORE_WALLS?1:3.8,
                     y:1.25,
@@ -93,7 +93,7 @@ export class ItemCollection {
                 price: '14.99$',
                 img:bagImg,
                 interact: true,
-                indicator : this.createIndicator({x:USE_NEW_STORE_WALLS?0:3.6, y:2.5, z:USE_NEW_STORE_WALLS?-3:1.7,}),
+                indicator : {},
                 position: {
                     x:USE_NEW_STORE_WALLS?0:3.6,
                     y:1.2,
@@ -112,7 +112,7 @@ export class ItemCollection {
                 price: '49.99$',
                 img:smallBagImg,
                 interact: true,
-                indicator : this.createIndicator({x:USE_NEW_STORE_WALLS?-2:-4.2, y:2.55, z:USE_NEW_STORE_WALLS?-3:.9,}),
+                indicator : {},
                 position: {
                     x:USE_NEW_STORE_WALLS?-2:-4.2,
                     y:1.25,
@@ -131,7 +131,7 @@ export class ItemCollection {
                 price: '49.99$',
                 img:smallBag2Img,
                 interact: true,
-                indicator : this.createIndicator({x:USE_NEW_STORE_WALLS?-1:-4.2, y:2.55, z:USE_NEW_STORE_WALLS?-3:-.9,}),
+                indicator : {},
                 position: {
                     x:USE_NEW_STORE_WALLS?-1:-4.2,
                     y:1.25,
@@ -178,7 +178,7 @@ export class ItemCollection {
         const sprite = new THREE.Sprite( material );
         sprite.visible = false
         sprite.position.set(pos.x, pos.y, pos.z);
-        sprite.scale.set(0.2, 0.2, 1);
+        sprite.scale.set(0.15, 0.15, 1);
         this.scene.add(sprite);
         return sprite
     }
@@ -218,6 +218,7 @@ export class ItemCollection {
                     cursorChangingObjects.push(i);
                 }
             })
+            this.items[indx].indicator = this.createIndicator({x:item.position.x, y:item.position.y + 0.75, z:item.position.z});
 			this.scene.add(data.scene);
             this.sceneItems[item.id] = data.scene;
 		})
