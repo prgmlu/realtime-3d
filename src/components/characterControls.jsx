@@ -108,8 +108,11 @@ export default class CharacterControls {
                 if(this.items.items[i].interact){
                     let itemPos = new THREE.Vector3(this.items.items[i].position.x, this.items.items[i].position.y, this.items.items[i].position.z);
                     let distFromChar = itemPos.distanceTo(this.model.position);
-                    if(distFromChar < 1.6){
-                        console.log(distFromChar)
+                    if(distFromChar < 2){
+                        this.items.items[i].indicator.visible = true;
+                    }
+                    else{
+                        this.items.items[i].indicator.visible = false;
                     }
                 }
             }

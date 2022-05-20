@@ -240,6 +240,13 @@ export default class Store extends Component {
 			this.orbitControls.update();
 			this.renderer.render(this.scene, this.camera);
 			TWEEN.update();
+			let indiDist = this.items.easeOutBounce((clock.elapsedTime % 2) / 2);
+			for(let i=0; i<this.items.items.length; i++){
+				if(this.items.items[i].interact){
+					let initPos = this.items.items[i].position.y + 1;
+					this.items.items[i].indicator.position.y = initPos - (indiDist * 0.75);
+				}
+			}
 
 
 			requestAnimationFrame(animate);

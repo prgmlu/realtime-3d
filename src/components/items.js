@@ -11,6 +11,7 @@ import smallBag2 from './static/glb_files/small_bag_2.glb'
 import smallBag2Img from './static/glb_imgs/small_bag_2.png'
 import bag from './static/glb_files/bag.glb'
 import bagImg from './static/glb_imgs/bag.png'
+import arrowImg from './static/arrow.png'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 
 
@@ -20,6 +21,7 @@ window.cursorChangingObjects = [];
 export class ItemCollection {
     constructor(scene, loader, camera, renderer,USE_NEW_STORE_WALLS){
         this.roomObject = USE_NEW_STORE_WALLS? newRoomObject: oldRoomObject;
+        this.scene = scene;
 
         window.addEventListener('mousemove', (e)=>{
             var hit = getRaycastIntersects(e,this.camera);
@@ -53,6 +55,7 @@ export class ItemCollection {
                 price: '99.99$',
                 img:shoesImg,
                 interact: true,
+                indicator : this.createIndicator({x:USE_NEW_STORE_WALLS?2:-4.2, y:2.55, z:USE_NEW_STORE_WALLS?-3:0,}),
                 position: {
                     x:USE_NEW_STORE_WALLS?2:-4.2,
                     y:1.25,
@@ -71,6 +74,7 @@ export class ItemCollection {
                 price: '79.99$',
                 img:shoes2Img,
                 interact: true,
+                indicator : this.createIndicator({x:USE_NEW_STORE_WALLS?1:3.8, y:2.55, z:USE_NEW_STORE_WALLS?-3:.7,}),
                 position: {
                     x:USE_NEW_STORE_WALLS?1:3.8,
                     y:1.25,
@@ -89,6 +93,7 @@ export class ItemCollection {
                 price: '14.99$',
                 img:bagImg,
                 interact: true,
+                indicator : this.createIndicator({x:USE_NEW_STORE_WALLS?0:3.6, y:2.5, z:USE_NEW_STORE_WALLS?-3:1.7,}),
                 position: {
                     x:USE_NEW_STORE_WALLS?0:3.6,
                     y:1.2,
@@ -107,6 +112,7 @@ export class ItemCollection {
                 price: '49.99$',
                 img:smallBagImg,
                 interact: true,
+                indicator : this.createIndicator({x:USE_NEW_STORE_WALLS?-2:-4.2, y:2.55, z:USE_NEW_STORE_WALLS?-3:.9,}),
                 position: {
                     x:USE_NEW_STORE_WALLS?-2:-4.2,
                     y:1.25,
@@ -125,6 +131,7 @@ export class ItemCollection {
                 price: '49.99$',
                 img:smallBag2Img,
                 interact: true,
+                indicator : this.createIndicator({x:USE_NEW_STORE_WALLS?-1:-4.2, y:2.55, z:USE_NEW_STORE_WALLS?-3:-.9,}),
                 position: {
                     x:USE_NEW_STORE_WALLS?-1:-4.2,
                     y:1.25,
@@ -138,8 +145,6 @@ export class ItemCollection {
             }
         ]
         
-
-        this.scene = scene;
         this.loader = loader;
         this.camera = camera;
         this.renderer = renderer;
@@ -165,6 +170,32 @@ export class ItemCollection {
 
     getItemById = (id) => {
         return this.sceneItems[id];
+    }
+
+    createIndicator = (pos) => {
+        const map = new THREE.TextureLoader().load(arrowImg);
+        const material = new THREE.SpriteMaterial( { map: map } );
+        const sprite = new THREE.Sprite( material );
+        sprite.visible = false
+        sprite.position.set(pos.x, pos.y, pos.z);
+        sprite.scale.set(0.2, 0.2, 1);
+        this.scene.add(sprite);
+        return sprite
+    }
+
+    easeOutBounce = (x) => {
+        const n1 = 7.5625;
+        const d1 = 2.75;
+        
+        if (x < 1 / d1) {
+            return n1 * x * x;
+        } else if (x < 2 / d1) {
+            return n1 * (x -= 1.5 / d1) * x + 0.75;
+        } else if (x < 2.5 / d1) {
+            return n1 * (x -= 2.25 / d1) * x + 0.9375;
+        } else {
+            return n1 * (x -= 2.625 / d1) * x + 0.984375;
+        }
     }
 
     putItems = () => {
