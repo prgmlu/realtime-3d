@@ -36,6 +36,7 @@ export class ItemCollection {
         this.items = [
             {
                 id:0,
+                type: '3D',
                 url:this.roomObject,
                 position : {
                     x:0,
@@ -50,6 +51,7 @@ export class ItemCollection {
             },
             {
                 id:1,
+                type: '3D',
                 url:shoes,
                 name: 'Black Shoes',
                 price: '99.99$',
@@ -69,6 +71,7 @@ export class ItemCollection {
             },
             {
                 id:2,
+                type: '3D',
                 url:shoes2,
                 name: 'Sports Shoes',
                 price: '79.99$',
@@ -88,6 +91,7 @@ export class ItemCollection {
             },
             {
                 id:3,
+                type: '3D',
                 url:bag,
                 name: 'Red Backpack',
                 price: '14.99$',
@@ -107,6 +111,7 @@ export class ItemCollection {
             },
             {
                 id:4,
+                type: '3D',
                 url:smallBag,
                 name: 'Red Hand Bag',
                 price: '49.99$',
@@ -126,6 +131,7 @@ export class ItemCollection {
             },
             {
                 id:5,
+                type: '3D',
                 url:smallBag2,
                 name: 'Black Hand Bag',
                 price: '49.99$',
@@ -142,6 +148,20 @@ export class ItemCollection {
                     USE_NEW_STORE_WALLS?0:Math.PI/2,
                     0,
                 ],
+            },
+            {
+                id:6,
+                type: '2D',
+                url:smallBag2Img,
+                name: 'Black Hand Bag',
+                price: '49.99$',
+                interact: true,
+                indicator : {},
+                position: {
+                    x:USE_NEW_STORE_WALLS?-1:-4.8,
+                    y:1.65,
+                    z:USE_NEW_STORE_WALLS?-3:-4,
+                },
             }
         ]
         
@@ -201,27 +221,40 @@ export class ItemCollection {
     putItems = () => {
 	this.items.map((item, indx)=>{
 		//the item fields are url, position, rotation
-		this.loader.load(item.url,(data) => {
-            data.scene.itemId = item.id;
-            data.scene.position.copy(item.position)
-            data.scene.rotation.fromArray(item.rotation)
-            data.scene.traverse((i)=>{
-                i.material && (i.material.envMapIntensity = 1.81);
-                if(i.name.includes('Floor') || i.name.includes('Glass')) {
-                    return
-                }
-                    ;
-                this.allObjectsParts.push(i);
-                i.userData.id = item.id;
-                //assuming the first item is the store walls
-                if(indx!=0){
-                    cursorChangingObjects.push(i);
-                }
+        if(item.type === '3D'){
+            this.loader.load(item.url,(data) => {
+                data.scene.itemId = item.id;
+                data.scene.position.copy(item.position)
+                data.scene.rotation.fromArray(item.rotation)
+                data.scene.traverse((i)=>{
+                    i.material && (i.material.envMapIntensity = 1.81);
+                    if(i.name.includes('Floor') || i.name.includes('Glass')) {
+                        return
+                    }
+                        ;
+                    this.allObjectsParts.push(i);
+                    i.userData.id = item.id;
+                    //assuming the first item is the store walls
+                    if(indx!=0){
+                        cursorChangingObjects.push(i);
+                    }
+                })
+                this.items[indx].indicator = this.createIndicator({x:item.position.x, y:item.position.y + 0.75, z:item.position.z});
+                this.scene.add(data.scene);
+                this.sceneItems[item.id] = data.scene;
             })
+        }
+        else if (item.type === '2D'){
+            let map = new THREE.TextureLoader().load(item.url);
+            let material = new THREE.SpriteMaterial( { map: map } );
+            let sprite = new THREE.Sprite( material );
+            sprite.position.copy(item.position)
             this.items[indx].indicator = this.createIndicator({x:item.position.x, y:item.position.y + 0.75, z:item.position.z});
-			this.scene.add(data.scene);
-            this.sceneItems[item.id] = data.scene;
-		})
+            sprite.userData.id = item.id;
+            this.scene.add(sprite);
+            this.sceneItems[item.id] = sprite;
+            cursorChangingObjects.push(sprite);
+        }
 	})
     }
 }

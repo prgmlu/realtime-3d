@@ -14,6 +14,7 @@ import ProductsCart from './ui/ProductsCart.jsx';
 import UI_Layer from './ui/UI_Layer';
 import SceneModal from './SceneModal';
 import CartModal from './ui/CartModal';
+import bagImg from './static/glb_imgs/bag.png'
 
 
 const  USE_AVATAR_CREATOR = false;
@@ -79,6 +80,28 @@ export default class Store extends Component {
 			});
 
 			this.characterControls = new CharacterControls(model, mixer, animationsMap, this.orbitControls, this.camera, 'Idle',this.collisionDetection, this.items );
+
+			// console.log(model.children[0].children[1]);
+			// for(let i=0; i<this.items.allObjectsParts.length; i++){
+			// 	console.log(this.items.allObjectsParts[i].name)
+			// }
+
+			const textureLoader = new THREE.TextureLoader();
+			const texture = textureLoader.load( bagImg );
+			texture.flipY = false;
+
+			// setTimeout(() => {
+			// 	model.children[0].children[1].material.map = texture;
+			//   }, "5000");
+			
+			// const avatarPart = this.scene.getObjectByName("Hips");
+			// avatarPart.traverse((child) => {
+			// 	console.log(child.name)
+			// 	// let partParent = avatarPart.parent;
+			// 	// partParent.remove(avatarPart);
+			// })
+			// console.log(avatarPart)
+			
 		});
 	}
 
@@ -179,7 +202,10 @@ export default class Store extends Component {
 					}, this);
 			}
 		})
-		
+
+		window.addEventListener('resize', ()=>{
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+        })
 
 		this.canvas = document.getElementById('webgl');
 		this.renderer = new THREE.WebGLRenderer({
