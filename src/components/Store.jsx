@@ -14,7 +14,6 @@ import ProductsCart from './ui/ProductsCart.jsx';
 import UI_Layer from './ui/UI_Layer';
 import SceneModal from './SceneModal';
 import CartModal from './ui/CartModal';
-import bagImg from './static/glb_imgs/bag.png'
 
 
 const  USE_AVATAR_CREATOR = false;
@@ -48,6 +47,7 @@ export default class Store extends Component {
 	state = {
 		sceneModal : false,
 		modalItem : {},
+		modalCarousel: [],
 		cartModal : false,
 		cartItems : [],
 		itemNum: 1,
@@ -80,27 +80,6 @@ export default class Store extends Component {
 			});
 
 			this.characterControls = new CharacterControls(model, mixer, animationsMap, this.orbitControls, this.camera, 'Idle',this.collisionDetection, this.items );
-
-			// console.log(model.children[0].children[1]);
-			// for(let i=0; i<this.items.allObjectsParts.length; i++){
-			// 	console.log(this.items.allObjectsParts[i].name)
-			// }
-
-			const textureLoader = new THREE.TextureLoader();
-			const texture = textureLoader.load( bagImg );
-			texture.flipY = false;
-
-			// setTimeout(() => {
-			// 	model.children[0].children[1].material.map = texture;
-			//   }, "5000");
-			
-			// const avatarPart = this.scene.getObjectByName("Hips");
-			// avatarPart.traverse((child) => {
-			// 	console.log(child.name)
-			// 	// let partParent = avatarPart.parent;
-			// 	// partParent.remove(avatarPart);
-			// })
-			// console.log(avatarPart)
 			
 		});
 	}
@@ -144,7 +123,7 @@ export default class Store extends Component {
 	}
 
 	closeSceneModal = () => {
-		this.setState({sceneModal:false, modalItem:{}});
+		this.setState({sceneModal:false, modalItem:{}, modalCarousel: []});
 	}
 
 	addToCart = (itemID) => {
@@ -197,6 +176,7 @@ export default class Store extends Component {
 					this.setState({
 						sceneModal : true,
 						modalItem : clickedItem,
+						modalCarousel: this.items.items[id].carousel
 					})
 						//
 					}, this);
@@ -284,7 +264,7 @@ export default class Store extends Component {
 	render() {
 		return (
 			<div className="Store" style={{width:window.innerWidth, height:window.innerHeight, overflow:'hidden'}}>
-				{this.state.sceneModal && <SceneModal item={this.state.modalItem} closeModal={this.closeSceneModal} addToCart={this.addToCart}/>}
+				{this.state.sceneModal && <SceneModal item={this.state.modalItem} carousel={this.state.modalCarousel} closeModal={this.closeSceneModal} addToCart={this.addToCart}/>}
 				<canvas id='webgl'></canvas>
 				{USE_AVATAR_CREATOR && <AvatarCreator/>}
 				<UI_Layer/>

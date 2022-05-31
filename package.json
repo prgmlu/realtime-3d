@@ -55,6 +55,7 @@
 		"redux": "^4.1.2",
 		"redux-devtools-extension": "^2.13.9",
 		"redux-thunk": "^2.4.1",
+		"slick-carousel": "^1.8.1",
 		"three": "0.137.0",
 		"universal-cookie": "^4.0.4",
 		"uuid": "^8.3.2"
