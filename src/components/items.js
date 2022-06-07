@@ -3,17 +3,22 @@ import oldRoomObject from './static/glb_files/walls.glb'
 // import newRoomObject from './static/glb_files/Armani_GlowRoomV00011.glb'
 import shoes from './static/glb_files/shoes.glb'
 import shoesImg from './static/glb_imgs/shoes.png'
-import shoes2 from './static/glb_files/shoes_2.glb'
-import shoes2Img from './static/glb_imgs/shoes_2.png'
+import sportsShoes from './static/glb_files/sportsShoes.glb'
+import sportsShoesImg from './static/glb_imgs/sportsShoes.png'
 import smallBag from './static/glb_files/small_bag.glb'
 import smallBagImg from './static/glb_imgs/small_bag.png'
 import smallBag2 from './static/glb_files/small_bag_2.glb'
 import smallBag2Img from './static/glb_imgs/small_bag_2.png'
-import bag from './static/glb_files/bag.glb'
-import bagImg from './static/glb_imgs/bag.png'
+import backPack from './static/glb_files/backPack.glb'
+import backPackImg from './static/glb_imgs/backPack.png'
 import arrowImg from './static/arrow.png'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 
+function importImgsFolder(r) {
+    let images = [];
+    r.keys().map((item) => {images.push(r(item).default)});
+    return images;
+}
 
 window.interactObjects = [];
 window.cursorChangingObjects = [];
@@ -72,10 +77,11 @@ export class ItemCollection {
             {
                 id:2,
                 type: '3D',
-                url:shoes2,
+                url:sportsShoes,
                 name: 'Sports Shoes',
                 price: '79.99$',
-                img:shoes2Img,
+                img:sportsShoesImg,
+                carousel: importImgsFolder(require.context('./static/glb_imgs/sportsShoes', false, /\.(png)$/)),
                 interact: true,
                 indicator : {},
                 position: {
@@ -92,10 +98,11 @@ export class ItemCollection {
             {
                 id:3,
                 type: '3D',
-                url:bag,
+                url:backPack,
                 name: 'Red Backpack',
                 price: '14.99$',
-                img:bagImg,
+                img:backPackImg,
+                carousel: importImgsFolder(require.context('./static/glb_imgs/backPack', false, /\.(png)$/)),
                 interact: true,
                 indicator : {},
                 position: {

@@ -4,20 +4,18 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import TWEEN from '@tweenjs/tween.js';
 import Lights from './Lights';
-import AvatarCreator from './avatarCreator';
+import AvatarCreator from './AvatarCreator';
 import CharacterControls from './characterControls';
 import CollisionDetection from './CollisionDetection';
 import {ItemCollection, getRaycastIntersects} from './items';
-import defaultChar from './static/glb_files/defaultChar.glb';
 import Animations from './static/glb_files/animations.glb';
 import ProductsCart from './ui/ProductsCart.jsx';
 import UI_Layer from './ui/UI_Layer';
 import SceneModal from './SceneModal';
 import CartModal from './ui/CartModal';
-import bagImg from './static/glb_imgs/bag.png'
+import defaultChar from './static/glb_files/defaultChar.glb';
 
 
-const  USE_AVATAR_CREATOR = false;
 const USE_NEW_STORE_WALLS = false;
 
 const createBoundingObj = (position) => {
@@ -43,7 +41,7 @@ export default class Store extends Component {
 		this.loader = new GLTFLoader();
 		this.collisionDetection = new CollisionDetection([]);
 		this.loader.crossOrigin = true;
-		this.animations = this.loader.load(Animations, (data) => {this.animations = data.animations});
+		this.animations = {};
 	}
 	state = {
 		sceneModal : false,
@@ -54,94 +52,38 @@ export default class Store extends Component {
 	}
 
 	loadAvatar = (avatar) => {
-	
-		this.loader.load(avatar, (data) => {
-			const model = data.scene;
-			model.traverse(function (object) {
-				object.material && (object.material.envMapIntensity = 1.81);
-				if (object.isMesh) object.castShadow = true;
-			});
-
-			model.rotation.y = Math.PI;
-			model.position.y = 0.1;
-			model.position.x = 0;
-			model.position.z = USE_NEW_STORE_WALLS?0:6;
-
-			let objPos = {x:model.position.x, y:1, z:model.position.z};
-			model.boundingObj = createBoundingObj(objPos);
-			this.scene.add(model);
-			this.scene.add(model.boundingObj);
-
-			const charAnimations = this.animations;
-			const mixer = new THREE.AnimationMixer(model);
-			const animationsMap = new Map();
-			charAnimations.filter(a => a.name != 'TPose').forEach((a) => {
-				animationsMap.set(a.name, mixer.clipAction(a));
-			});
-
-			this.characterControls = new CharacterControls(model, mixer, animationsMap, this.orbitControls, this.camera, 'Idle',this.collisionDetection, this.items );
-
-			// console.log(model.children[0].children[1]);
-			// for(let i=0; i<this.items.allObjectsParts.length; i++){
-			// 	console.log(this.items.allObjectsParts[i].name)
-			// }
-
-			const textureLoader = new THREE.TextureLoader();
-			const texture = textureLoader.load( bagImg );
-			texture.flipY = false;
-
-			// setTimeout(() => {
-			// 	model.children[0].children[1].material.map = texture;
-			//   }, "5000");
-			
-			// const avatarPart = this.scene.getObjectByName("Hips");
-			// avatarPart.traverse((child) => {
-			// 	console.log(child.name)
-			// 	// let partParent = avatarPart.parent;
-			// 	// partParent.remove(avatarPart);
-			// })
-			// console.log(avatarPart)
-			
-		});
-	}
-
-	parse = (event) => {
-		try{
-			return JSON.parse(event.data);
-		}
-		catch(error){
-			console.log(error);
-		}
-	}
-
-	subscribe = (event) =>{
-
-		const json = this.parse(event);
-	
-		if (json?.source !== 'readyplayerme') {
-			return;
-		}
-	
-		// Susbribe to all events sent from Ready Player Me once frame is ready
-		if (json.eventName === 'v1.frame.ready') {
-
-			frame.contentWindow.postMessage(
-			JSON.stringify({
-				target: 'readyplayerme',
-				type: 'subscribe',
-				eventName: 'v1.**'
-			}),
-			'*'
-			);
-		}
-	
-		// Get avatar GLB URL
-		if (json.eventName === 'v1.avatar.exported') {
-
-			this.loadAvatar(json.data.url);
-			document.getElementById('frame').hidden = true;
-		}
-	}
+    
+        this.loader.load(avatar, (data) => {
+            this.loader.load(Animations, (anims) => {
+                this.animations = anims.animations
+                const model = data.scene;
+                model.traverse(function (object) {
+                    object.material && (object.material.envMapIntensity = 1.81);
+                    if (object.isMesh) object.castShadow = true;
+                });
+                
+                // model.rotation.y = Math.PI;
+                model.position.y = 0.1;
+                model.position.x = 0;
+                model.position.z = USE_NEW_STORE_WALLS?0:6;
+                
+                let objPos = {x:model.position.x, y:1, z:model.position.z};
+                model.boundingObj = createBoundingObj(objPos);
+                this.scene.add(model);
+                this.scene.add(model.boundingObj);
+                
+                const charAnimations = this.animations;
+                const mixer = new THREE.AnimationMixer(model);
+                const animationsMap = new Map();
+                charAnimations.filter(a => a.name != 'TPose').forEach((a) => {
+                    animationsMap.set(a.name, mixer.clipAction(a));
+                });
+                
+                this.characterControls = new CharacterControls(model, mixer, animationsMap, this.orbitControls, this.camera, 'Idle',this.collisionDetection, this.items );
+                
+            });
+        });
+    }
 
 	closeSceneModal = () => {
 		this.setState({sceneModal:false, modalItem:{}});
@@ -244,18 +186,7 @@ export default class Store extends Component {
 		//CLOCK
 		const clock = new THREE.Clock();
 
-		if ( USE_AVATAR_CREATOR ) {
-			//READY PLAYER ME API
-			const frame = document.getElementById('frame');
-			frame.src = ' https://obsessvr.readyplayer.me/avatar?frameApi';
-			document.getElementById('frame').hidden = false;
-			window.addEventListener('message', this.subscribe);
-			document.addEventListener('message', this.subscribe);
-		}
-		else{
-			//DEFAULT CHARACTER
-			this.loadAvatar(defaultChar);
-		}
+		this.loadAvatar(defaultChar);
 
 		const animate = () => {
 
@@ -273,7 +204,6 @@ export default class Store extends Component {
 					this.items.items[i].indicator.position.y = initPos - (indiDist * 0.5);
 				}
 			}
-
 
 			requestAnimationFrame(animate);
 		}

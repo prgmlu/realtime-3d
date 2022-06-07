@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
+import * as THREE from 'three'
 import Lights from './Lights';
 import {createScene, createRenderer} from './threeHelpers'
-import * as THREE from 'three'
 import CartButton from './ui/buttons/CartButton';
 import './SceneModal.css'
 
@@ -21,10 +21,9 @@ class SceneModal extends Component {
     constructor(props) {
         super(props);
         this.scene = createScene();
-        // this.scene.background = new THREE.Color( 'white' );
         this.renderer = createRenderer();
-        this.renderer.setSize((window.innerWidth*.35), (window.innerHeight*.8));
-		this.camera = new THREE.PerspectiveCamera(50, (window.innerWidth*.35) / (window.innerHeight*.8), 0.1, 1000);
+        this.renderer.setSize((window.innerWidth*.35), (window.innerWidth*.35));
+		this.camera = new THREE.PerspectiveCamera(40, 1, 0.1, 1000);
         this.myRef = React.createRef();
         this.lastMPos = {x: 0, y: 0};
         this.canRotate = false;
@@ -86,8 +85,8 @@ class SceneModal extends Component {
 
 	setZoom = (fov) => {
 		this.camera.fov = fov;
-		if (this.camera.fov < 10) this.camera.fov = 10;
-		if (this.camera.fov > 50) this.camera.fov = 50;
+		if (this.camera.fov < 1) this.camera.fov = 1;
+		if (this.camera.fov > 40) this.camera.fov = 40;
 		this.camera.updateProjectionMatrix();
 	}
 
@@ -114,7 +113,6 @@ class SceneModal extends Component {
 
 
     componentDidMount() {
-
         const Light = new Lights(this.scene, this.renderer);
 		Light.setUpEnvMapLights();
 
@@ -128,6 +126,8 @@ class SceneModal extends Component {
         this.myRef.current.appendChild(this.renderer.domElement);
         
         this.cube = createCube();
+
+        this.item.position.set(0, -0.03, -1.5);
         
         this.animate();
 
@@ -177,7 +177,7 @@ class SceneModal extends Component {
     render() {
         return (
             <div id='blur'>
-                <div id='modal' ref={this.myRef} >
+                <div id='modal'>
 
                             <div 
                             onClick={(e) => {
@@ -202,6 +202,8 @@ class SceneModal extends Component {
                                 }}
                             ></img>
                         </div>
+
+                        <div id='scene' ref={this.myRef}></div>
 
                         <CartButton itemId={this.item.itemId} addToCart={this.addToCart}/>
                         
