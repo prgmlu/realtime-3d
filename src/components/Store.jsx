@@ -216,7 +216,7 @@ export default class Store extends Component {
 			<div className="Store" style={{width:window.innerWidth, height:window.innerHeight, overflow:'hidden'}}>
 				{this.state.sceneModal && <SceneModal item={this.state.modalItem} closeModal={this.closeSceneModal} addToCart={this.addToCart}/>}
 				<canvas id='webgl'></canvas>
-				{USE_AVATAR_CREATOR && <AvatarCreator/>}
+				<AvatarCreator/>
 				<UI_Layer/>
 				<ProductsCart cartItems={this.state.cartItems} showModal={this.setCartModal}/>
 				{this.state.cartModal && <CartModal 

@@ -13,7 +13,7 @@ class AvatarCreator extends Component {
         this.scene = createScene();
         this.renderer = createRenderer();
         this.renderer.setSize((window.innerWidth*.3528), (window.innerHeight*.6205));
-		this.camera = new THREE.PerspectiveCamera(40, (window.innerWidth*.3528)/(window.innerHeight*.6205), 0.1, 1000);
+		this.camera = new THREE.PerspectiveCamera(50, (window.innerWidth*.3528)/(window.innerHeight*.6205), 0.1, 1000);
         this.loader = new GLTFLoader();
         this.myRef = React.createRef();
         this.lastMPos = {x: 0, y: 0};
@@ -94,7 +94,7 @@ class AvatarCreator extends Component {
 	setZoom = (fov) => {
 		this.camera.fov = fov;
 		if (this.camera.fov < 1) this.camera.fov = 1;
-		if (this.camera.fov > 40) this.camera.fov = 40;
+		if (this.camera.fov > 50) this.camera.fov = 50;
 		this.camera.updateProjectionMatrix();
 	}
 
