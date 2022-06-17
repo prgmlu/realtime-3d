@@ -9,6 +9,7 @@ import CharacterControls from './characterControls';
 import CollisionDetection from './CollisionDetection';
 import {ItemCollection, getRaycastIntersects} from './items';
 import Animations from './static/glb_files/animations.glb';
+import AvatarButton from './ui/AvatarButton';
 import ProductsCart from './ui/ProductsCart.jsx';
 import UI_Layer from './ui/UI_Layer';
 import SceneModal from './SceneModal';
@@ -41,9 +42,13 @@ export default class Store extends Component {
 		this.loader = new GLTFLoader();
 		this.collisionDetection = new CollisionDetection([]);
 		this.loader.crossOrigin = true;
+		this.currentClothing = [];
+		this.avatarPos = this.state?.avatar?.position?.clone();
 		this.animations = {};
 	}
 	state = {
+		avatarCreator : false,
+		avatar : {},
 		sceneModal : false,
 		modalItem : {},
 		cartModal : false,
@@ -61,29 +66,59 @@ export default class Store extends Component {
                     object.material && (object.material.envMapIntensity = 1.81);
                     if (object.isMesh) object.castShadow = true;
                 });
+
+				this.setState({avatar:model});
                 
                 // model.rotation.y = Math.PI;
-                model.position.y = 0.1;
-                model.position.x = 0;
-                model.position.z = USE_NEW_STORE_WALLS?0:6;
+                this.state.avatar.position.y = 0.1;
+                this.state.avatar.position.x = 0;
+                this.state.avatar.position.z = USE_NEW_STORE_WALLS?0:6;
                 
-                let objPos = {x:model.position.x, y:1, z:model.position.z};
-                model.boundingObj = createBoundingObj(objPos);
-                this.scene.add(model);
-                this.scene.add(model.boundingObj);
+                let objPos = {x:this.state.avatar.position.x, y:1, z:this.state.avatar.position.z};
+                this.state.avatar.boundingObj = createBoundingObj(objPos);
+                this.scene.add(this.state.avatar);
+                this.scene.add(this.state.avatar.boundingObj);
                 
                 const charAnimations = this.animations;
-                const mixer = new THREE.AnimationMixer(model);
+                const mixer = new THREE.AnimationMixer(this.state.avatar);
                 const animationsMap = new Map();
                 charAnimations.filter(a => a.name != 'TPose').forEach((a) => {
                     animationsMap.set(a.name, mixer.clipAction(a));
                 });
                 
-                this.characterControls = new CharacterControls(model, mixer, animationsMap, this.orbitControls, this.camera, 'Idle',this.collisionDetection, this.items );
+                this.characterControls = new CharacterControls(this.state.avatar, mixer, animationsMap, this.orbitControls, this.camera, 'Idle',this.collisionDetection, this.items );
+
+				this.showAvatarCreator();
                 
             });
         });
     }
+
+	showAvatarCreator = () => {
+		this.state.avatar.children[0].children.filter((object) => {return object.type == "SkinnedMesh"}).map((mesh) => {
+			this.currentClothing.push({name:mesh.name, texture: mesh.material.map})
+		});
+		this.avatarPos = this.state.avatar.position?.clone();
+		this.setState({avatarCreator:true});
+	}
+
+	saveAvatar = () => {
+		this.setState({avatarCreator:false});
+		this.state.avatar.position.copy(this.avatarPos.clone());
+		this.currentClothing = [];
+		this.scene.add(this.state.avatar);
+	}
+
+	closeAvatarCreator = () => {
+		this.setState({avatarCreator:false});
+		this.state.avatar.position.copy(this.avatarPos.clone());
+		this.currentClothing.map((clothing) => {
+			this.state.avatar.getObjectByName( clothing.name ).material.map = clothing.texture;
+			this.state.avatar.getObjectByName( clothing.name ).material.needsUpdate = true
+		})
+		this.currentClothing = [];
+		this.scene.add(this.state.avatar);
+	}
 
 	closeSceneModal = () => {
 		this.setState({sceneModal:false, modalItem:{}});
@@ -214,16 +249,25 @@ export default class Store extends Component {
 	render() {
 		return (
 			<div className="Store" style={{width:window.innerWidth, height:window.innerHeight, overflow:'hidden'}}>
-				{this.state.sceneModal && <SceneModal item={this.state.modalItem} closeModal={this.closeSceneModal} addToCart={this.addToCart}/>}
 				<canvas id='webgl'></canvas>
-				<AvatarCreator/>
 				<UI_Layer/>
+				{this.state.sceneModal && <SceneModal
+												item={this.state.modalItem}
+												closeModal={this.closeSceneModal}
+												addToCart={this.addToCart}/>}
+
+				<AvatarButton showModal={this.showAvatarCreator}/>
+				{this.state.avatarCreator && <AvatarCreator
+												saveAvatar={this.saveAvatar}
+												closeModal={this.closeAvatarCreator}
+												currentAvatar={this.state.avatar}/>}
+
 				<ProductsCart cartItems={this.state.cartItems} showModal={this.setCartModal}/>
 				{this.state.cartModal && <CartModal 
 											storeItems={this.items.items}
 											cartItems={this.state.cartItems}
 											setCartItems={this.setCartItems}
-										/>}
+				/>}
 			</div>
 		)
 	}

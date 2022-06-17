@@ -7,8 +7,8 @@ const femaleModelImg = 'https://cdn.obsess-vr.com/femaleModel%20.png';
 
 function importImgsFolder(r) {
     let images = [];
-    r.keys().map((item) => {        
-        images.push({type: item.split('./')[1].split('_')[0], src: r(item).default,})
+    r.keys().map((item) => {    
+        images.push({type: item.split('./')[1].split('_')[0], name: item.split('./')[1].split('.')[0], src: r(item).default,})
     });
     return images;
 }
@@ -18,7 +18,10 @@ class AvatarCreatorEditor extends Component {
     constructor(props) {
         super(props);
         this.textureLoader = new THREE.TextureLoader;
-        this.maleOutfits = importImgsFolder(require.context('./static/avatar/outfit/male', false, /\.(png)$/));
+        this.maleOutfits = {
+            textures : importImgsFolder(require.context('./static/avatar/outfit/male/textures', false, /\.(png)$/)),
+            display : importImgsFolder(require.context('./static/avatar/outfit/male/display', false, /\.(png)$/)),
+        }
         this.currentScene = props?.currentScene;
         this.currentAvatar = {};
     }
@@ -35,7 +38,8 @@ class AvatarCreatorEditor extends Component {
         this.setState({bodyType: e.target.id});
     }
     setOutfit = (e) => {
-        let selectedTexture = this.textureLoader.load ( e.target.src );
+        let selectedItem = this.maleOutfits.textures.filter((texture) => {return texture.name == e.target.id})[0];
+        let selectedTexture = this.textureLoader.load ( selectedItem.src );
         this.currentScene.children[0].children[0].getObjectByName( e.target.className ).material.map = selectedTexture;
         this.currentScene.children[0].children[0].getObjectByName( e.target.className ).material.needsUpdate = true
     }
@@ -81,8 +85,8 @@ class AvatarCreatorEditor extends Component {
                     </div>}
 
                     {this.state.activeTab==3&&<div className='outfitEditor'>
-                        {this.maleOutfits.map((outfit, index) => {
-                            return <img id={index} src={outfit.src} class={outfit.type} onClick={this.setOutfit}/>
+                        {this.maleOutfits.display.map((outfit, index) => {
+                            return <img key={index} id={outfit.name} src={outfit.src} className={outfit.type} onClick={this.setOutfit}/>
                         })}
                     </div>}
                 </div>

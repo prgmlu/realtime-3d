@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import * as THREE from 'three'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import {createScene, createRenderer} from './threeHelpers'
 import Lights from './Lights';
 import AvatarCreatorEditor from './AvatarCreatorEditor';
-import defaultChar from './static/glb_files/defaultChar.glb';
 import './AvatarCreator.css'
 
 class AvatarCreator extends Component {
@@ -14,38 +12,19 @@ class AvatarCreator extends Component {
         this.renderer = createRenderer();
         this.renderer.setSize((window.innerWidth*.3528), (window.innerHeight*.6205));
 		this.camera = new THREE.PerspectiveCamera(50, (window.innerWidth*.3528)/(window.innerHeight*.6205), 0.1, 1000);
-        this.loader = new GLTFLoader();
         this.myRef = React.createRef();
         this.lastMPos = {x: 0, y: 0};
         this.canRotate = false;
-        this.currentAvatar = {};
+        this.currentAvatar = props?.currentAvatar;
+        this.saveAvatar = props?.saveAvatar;
         this.closeModal = props?.closeModal;
     }
 
-    loadAvatar = (avatar) => {
-	
-		this.loader.load(avatar, (data) => {
-			const model = data.scene;
-			model.traverse(function (object) {
-				object.material && (object.material.envMapIntensity = 1.81);
-				if (object.isMesh) object.castShadow = true;
-			});
-            model.position.set(0, -.9, -2.7);
-            model.rotation.set(0,0,0,'XYZ');
+    loadAvatar = () => {
+        this.currentAvatar.position.set(0, -.9, -2.7);
+        this.currentAvatar.rotation.set(0,0,0,'XYZ');
 
-            this.currentAvatar = model;
-
-			this.scene.add(this.currentAvatar);
-
-			// const charAnimations = this.animations;
-			// const mixer = new THREE.AnimationMixer(model);
-			// const animationsMap = new Map();
-			// charAnimations.filter(a => a.name != 'TPose').forEach((a) => {
-			// 	animationsMap.set(a.name, mixer.clipAction(a));
-			// });
-
-			
-		});
+        this.scene.add(this.currentAvatar);
 	}
 
     rotateAvatar = (e) => {
@@ -117,8 +96,7 @@ class AvatarCreator extends Component {
 
 	handleMouseUp = () => {
 		this.canRotate = false;
-	};    
-
+	};
 
     componentDidMount() {
         const Light = new Lights(this.scene, this.renderer);
@@ -131,7 +109,7 @@ class AvatarCreator extends Component {
 
         this.myRef.current.appendChild(this.renderer.domElement);
 
-        this.loadAvatar(defaultChar);
+        this.loadAvatar();
                 
         this.animate();
 
@@ -175,8 +153,8 @@ class AvatarCreator extends Component {
                 </div>
 
                 <div className="editorButtons">
-                    <button type='button' className='cancelButton'> Cancel </button>
-                    <button type='button' className='saveButton'> Save </button>
+                    <button type='button' className='cancelButton' onClick={this.closeModal}> Cancel </button>
+                    <button type='button' className='saveButton' onClick={this.saveAvatar}> Save </button>
                 </div>                     
             </div>
         );

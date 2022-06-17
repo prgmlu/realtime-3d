@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PoweredByObsess from '../ui/PoweredByObsess';
-import MusicController from './MusicController.jsx';
 import './BottomBarRight.css';
 
 
@@ -12,7 +11,6 @@ class BottomBarRight extends Component {
     render() {
         return (
             <div id='bottomBarRight'>             
-                <MusicController/>         
                 <PoweredByObsess/>                         
             </div>
         );
