@@ -47,7 +47,7 @@ export default class CharacterControls {
     update = (delta, keysPressed) => {
 
         const directionPressed = DIRECTIONS.some(key => keysPressed[key] == true);
-        let play = directionPressed? 'Walk' : 'Idle';
+        let play = directionPressed? 'Walking' : 'Idle';
 
 
         if (this.currentAction != play) {
@@ -62,7 +62,7 @@ export default class CharacterControls {
 
         this.mixer.update(delta)
 
-        if (this.currentAction == 'Walk') {
+        if (this.currentAction == 'Walking') {
             // calculate towards camera direction
             var angleYCameraDirection = Math.PI + Math.atan2(
                     (this.camera.position.x - this.model.position.x), 

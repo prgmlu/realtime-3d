@@ -14,7 +14,7 @@ import ProductsCart from './ui/ProductsCart.jsx';
 import UI_Layer from './ui/UI_Layer';
 import SceneModal from './SceneModal';
 import CartModal from './ui/CartModal';
-import defaultChar from './static/glb_files/defaultChar.glb';
+import defaultChar from './static/glb_files/mixamoriggedopaque.glb';
 
 
 const USE_NEW_STORE_WALLS = false;
@@ -82,7 +82,7 @@ export default class Store extends Component {
                 const charAnimations = this.animations;
                 const mixer = new THREE.AnimationMixer(this.state.avatar);
                 const animationsMap = new Map();
-                charAnimations.filter(a => a.name != 'TPose').forEach((a) => {
+                charAnimations.filter(a => a.name != 'T-Pose').forEach((a) => {
                     animationsMap.set(a.name, mixer.clipAction(a));
                 });
                 
