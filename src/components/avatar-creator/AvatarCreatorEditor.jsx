@@ -19,8 +19,8 @@ class AvatarCreatorEditor extends Component {
         super(props);
         this.textureLoader = new THREE.TextureLoader;
         this.maleOutfits = {
-            textures : importImgsFolder(require.context('./static/avatar/outfit/male/textures', false, /\.(png)$/)),
-            display : importImgsFolder(require.context('./static/avatar/outfit/male/display', false, /\.(png)$/)),
+            textures : importImgsFolder(require.context('../static/avatar/outfit/male/textures', false, /\.(png)$/)),
+            display : importImgsFolder(require.context('../static/avatar/outfit/male/display', false, /\.(png)$/)),
         }
         this.currentScene = props?.currentScene;
         this.currentAvatar = {};

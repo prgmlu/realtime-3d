@@ -4,7 +4,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import TWEEN from '@tweenjs/tween.js';
 import Lights from './Lights';
-import AvatarCreator from './AvatarCreator';
+import AvatarCreator from './avatar-creator/AvatarCreator';
 import CharacterControls from './characterControls';
 import CollisionDetection from './CollisionDetection';
 import {ItemCollection, getRaycastIntersects} from './items';

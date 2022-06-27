@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-import BaseImage from './image-components/BaseImage';
-import { getObsessLogoAsync } from '../../utils/StaticAssetManager';
-import { isMobileDevice } from '../../utils/DeviceDetector';
 import './BottomBarRight.css';
 
 const obsessLogoStyle = {
@@ -11,7 +8,12 @@ const obsessLogoStyle = {
     cursor:'pointer',
 };
 
-const defualtObsessUrl = 'http://www.obsessAR.com/';
+const isMobileDevice = function(){
+    //for now
+    return false;
+}
+
+const defaultObsessUrl = 'http://www.obsessAR.com/';
 const isMobile = isMobileDevice();
 
 class PoweredByObsess extends Component {
@@ -31,16 +33,12 @@ class PoweredByObsess extends Component {
         }
 
         this.state = {
-            obsessLogoSrc: '',
-            obsessUrl: defualtObsessUrl,
+            obsessLogoSrc: 'https://cdn.obsess-vr.com/obsess-logo.png',
+            obsessUrl: defaultObsessUrl,
         };
     }
 
-    componentDidMount() {
-        getObsessLogoAsync()
-            .then(url => this.setState({ obsessLogoSrc: url }))
-            .catch(error => console.error(error));
-    }
+    componentDidMount() {}
 
     goToObsessUrl() {
         this.setState({
@@ -62,7 +60,7 @@ class PoweredByObsess extends Component {
                     <p style={{color:'white', cursor:'pointer', lineHeight: '16px'}}>Powered by</p>
                 </div>
                 <div id='bottomBarObsessLogoWrapper' style={{height: '100%'}}>
-                    <BaseImage
+                    <img
                         src={this.state.obsessLogoSrc}
                         style={obsessLogoStyle}
                     />

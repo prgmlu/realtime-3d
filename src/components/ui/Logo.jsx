@@ -1,8 +1,4 @@
 import React, { Component } from 'react';
-import {  getTrackingParameter } from '../../utils/StoreConfigManager.js';
-import { LogoClicked } from '../../utils/Analytics.js';
-import InteractableElement from './InteractableElement';
-import BaseImage from './image-components/BaseImage';
 import './Logo.css';
 
 const style = {
@@ -12,20 +8,13 @@ const style = {
 class Logo extends Component {
 	constructor(props) {
 		super(props);
-		this.onClick = this.onClick.bind(this);
 		this.state = {
 			imageSrc: 'https://cdn.obsess-vr.com/Obsess-color-logo-32.png',
 			redirectUrl: '',
 		};
 	}
 
-	onClick() {
-		LogoClicked();
-		const trackingParam = getTrackingParameter();
-		const trackingParamUrl = `${this.state.redirectUrl}${
-			this.state.redirectUrl.includes('?') ? '&' : '?'
-		}${trackingParam}`;
-		window.open(trackingParamUrl, '_blank');
+	onClick = () =>{
 	}
 
 	render() {
@@ -35,9 +24,11 @@ class Logo extends Component {
 		}
 		return (
 			<div id="topLeftLogo" className="hoverable">
-				<InteractableElement onClick={this.onClick}>
-					<BaseImage src={imageSrc} style={style} />
-				</InteractableElement>
+			<img
+				onClick={this.onClick}
+                src={imageSrc}
+                style={style}
+            />
 			</div>
 		);
 	}

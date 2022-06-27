@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as THREE from 'three'
-import {createScene, createRenderer} from './threeHelpers'
-import Lights from './Lights';
+import {createScene, createRenderer} from '../threeHelpers'
+import Lights from '../Lights';
 import AvatarCreatorEditor from './AvatarCreatorEditor';
 import './AvatarCreator.css'
 

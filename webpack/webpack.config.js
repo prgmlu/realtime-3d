@@ -1,9 +1,8 @@
-const { ModuleFederationPlugin } = require('webpack').container;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
-const { loadConfig } = require('../configs');
-const deps = require('../package.json').dependencies;
+// const { loadConfig } = require('../configs');
+// const deps = require('../package.json').dependencies;
 
 module.exports = (options) => {
 	const { WEBPACK_SERVE, buildEnv } = options;
@@ -87,7 +86,7 @@ module.exports = (options) => {
 		template: './public/index.html',
 	};
 
-	webpackPluginOptions.storeId = loadConfig(buildEnv).STORE_ID;
+	// webpackPluginOptions.storeId = loadConfig(buildEnv).STORE_ID;
 	config.plugins.push(new HtmlWebpackPlugin(webpackPluginOptions));
 
 	if (WEBPACK_SERVE) {
@@ -100,7 +99,7 @@ module.exports = (options) => {
 	}
 
 	config.externals = {
-		config: JSON.stringify(loadConfig('development')),
+		// config: JSON.stringify(loadConfig('development')),
 	};
 
 	return config;
