@@ -31,12 +31,16 @@ const createBoundingObj = (position) => {
 export default class Store extends Component {
 	constructor(props){
 		super(props)
+		this.sizes = {
+            width: window.innerWidth,
+            height: window.innerHeight
+        }
 		this.reduxStore = props?.store;
 		this.canvas = {};
 		this.renderer = {};
 		this.scene = new THREE.Scene();
 		window.mainScene = this.scene;
-		this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+		this.camera = new THREE.PerspectiveCamera(50, this.sizes.width / this.sizes.height, 0.1, 1000);
 		this.orbitControls = {};
 		this.characterControls = {};
 		this.loader = new GLTFLoader();
@@ -180,8 +184,17 @@ export default class Store extends Component {
 			}
 		})
 
-		window.addEventListener('resize', ()=>{
-            this.renderer.setSize(window.innerWidth, window.innerHeight);
+		window.addEventListener('resize', () => {
+            // Update sizes
+            this.sizes.width = window.innerWidth
+            this.sizes.height = window.innerHeight
+        
+            // Update camera
+            this.camera.aspect = this.sizes.width / this.sizes.height
+            this.camera.updateProjectionMatrix()
+        
+            // Update renderer
+            this.renderer.setSize(this.sizes.width, this.sizes.height)
         })
 
 		this.canvas = document.getElementById('webgl');

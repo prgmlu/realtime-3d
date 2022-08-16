@@ -8,10 +8,14 @@ import './AvatarCreator.css'
 class AvatarCreator extends Component {
     constructor(props) {
         super(props);
+        this.sizes = {
+            width: window.innerWidth * 0.3528,
+            height: window.innerHeight * 0.6205
+        }
         this.scene = createScene();
         this.renderer = createRenderer();
-        this.renderer.setSize((window.innerWidth*.3528), (window.innerHeight*.6205));
-		this.camera = new THREE.PerspectiveCamera(50, (window.innerWidth*.3528)/(window.innerHeight*.6205), 0.1, 1000);
+        this.renderer.setSize(this.sizes.width, this.sizes.height);
+		this.camera = new THREE.PerspectiveCamera(50, this.sizes.width / this.sizes.height, 0.1, 1000);
         this.myRef = React.createRef();
         this.lastMPos = {x: 0, y: 0};
         this.canRotate = false;
@@ -21,7 +25,7 @@ class AvatarCreator extends Component {
     }
 
     loadAvatar = () => {
-        this.currentAvatar.position.set(0, -.9, -2.7);
+        this.currentAvatar.position.set(-0.5, -.9, -2.7);
         this.currentAvatar.rotation.set(0,0,0,'XYZ');
 
         this.scene.add(this.currentAvatar);
@@ -106,6 +110,18 @@ class AvatarCreator extends Component {
         this.renderer.domElement.addEventListener('mousemove', this.handleRendererMouseMove, true);
         this.renderer.domElement.addEventListener('mouseup',this.handleMouseUp, true);
         this.renderer.domElement.addEventListener('mousedown',this.handleMouseDown, true);
+        window.addEventListener('resize', () => {
+            // Update sizes
+            this.sizes.width = window.innerWidth * 0.3528
+            this.sizes.height = window.innerHeight * 0.6205
+        
+            // Update camera
+            this.camera.aspect = this.sizes.width / this.sizes.height
+            this.camera.updateProjectionMatrix()
+        
+            // Update renderer
+            this.renderer.setSize(this.sizes.width, this.sizes.height)
+        })
 
         this.myRef.current.appendChild(this.renderer.domElement);
 
@@ -123,39 +139,25 @@ class AvatarCreator extends Component {
     render() {
         return (
             <div className='avatarCreator'>
-                <div 
-                    onClick={(e) => {
-                        this.closeModal();
-                    }}
-                    style={{
-                        position: 'absolute',
-                        cursor: 'pointer',
-                        zIndex: 2,
-                        right: '-15px',
-                        top: '-15px',
-                    }}
-                >
-                    <img
-                        src="https://cdn.obsess-vr.com/Close-button.png"
-                        style={{
-                            maxWidth: '100%',
-                            width: '2.5em',
-                            float: 'right',
-                        }}
-                    ></img>
+                <div className='backButton' onClick={(e) => {this.closeModal();}} >
+                    <svg className='group' width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 1L1 6L6 11" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M1 6H9C14.523 6 19 10.477 19 16V17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    <div className='backButtonText'>
+                        Back
+                    </div>
                 </div>
-
-                <h1 className='title'>Customize your avatar</h1>
 
                 <div className="editorBody">
-                    <AvatarCreatorEditor currentScene={this.scene}/>
                     <div className='avatarCreatorScene' ref={this.myRef}></div>
+                    <AvatarCreatorEditor currentScene={this.scene}/>
                 </div>
 
-                <div className="editorButtons">
+                 {/* <div className="editorButtons">
                     <button type='button' className='cancelButton' onClick={this.closeModal}> Cancel </button>
                     <button type='button' className='saveButton' onClick={this.saveAvatar}> Save </button>
-                </div>                     
+                </div> */}
             </div>
         );
     }

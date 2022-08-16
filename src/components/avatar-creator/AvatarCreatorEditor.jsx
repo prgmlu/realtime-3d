@@ -1,100 +1,37 @@
-import React, { Component } from 'react';
-import * as THREE from 'three'
+import React, { useState } from 'react';
+import Body from './Body';
+import Outfit from './Outfit';
+import Face from './Face';
 import './AvatarCreatorEditor.css'
+import { svgBody, svgFace, svgOutfit } from './utils';
 
-const maleModelImg = 'https://cdn.obsess-vr.com/maleModel%20.png';
-const femaleModelImg = 'https://cdn.obsess-vr.com/femaleModel%20.png';
+const AvatarCreatorEditor = (props) => {
+    const [activeTab, setActiveTab] = useState(1);
+    const currentAvatar = {};
 
-function importImgsFolder(r) {
-    let images = [];
-    r.keys().map((item) => {    
-        images.push({type: item.split('./')[1].split('_')[0], name: item.split('./')[1].split('.')[0], src: r(item).default,})
-    });
-    return images;
-}
-
-
-class AvatarCreatorEditor extends Component {
-    constructor(props) {
-        super(props);
-        this.textureLoader = new THREE.TextureLoader;
-        this.maleOutfits = {
-            textures : importImgsFolder(require.context('../static/avatar/outfit/male/textures', false, /\.(png)$/)),
-            display : importImgsFolder(require.context('../static/avatar/outfit/male/display', false, /\.(png)$/)),
-        }
-        this.currentScene = props?.currentScene;
-        this.currentAvatar = {};
-    }
-    state = {
-        activeTab : 1,
-        bodyType : 'male',
+    const onTabClick = (select) => {
+        setActiveTab(select);
     }
 
-    onTabClick = (e) => {
-        this.setState({activeTab: e.target.id});
-    }
-
-    setBodyType = (e) => {
-        this.setState({bodyType: e.target.id});
-    }
-    setOutfit = (e) => {
-        let selectedItem = this.maleOutfits.textures.filter((texture) => {return texture.name == e.target.id})[0];
-        let selectedTexture = this.textureLoader.load ( selectedItem.src );
-        this.currentScene.children[0].children[0].getObjectByName( e.target.className ).material.map = selectedTexture;
-        this.currentScene.children[0].children[0].getObjectByName( e.target.className ).material.needsUpdate = true
-    }
-
-    // componentDidMount() {  
-
-    // }
-
-    render() {
-        return (
-            <div className='avatarCreatorEditor'>
-
-                <div className="settings">
-                    <div id='1' className={this.state.activeTab==1? 'activeTab' : 'inactiveTab'} onClick={this.onTabClick}>
-                        <p id='1'>Body type</p>
-                    </div>
-                    <div id='2' className={this.state.activeTab==2? 'activeTab' : 'inactiveTab'} onClick={this.onTabClick}>
-                        <p id='2'>Skin tone</p>
-                    </div>
-                    <div id='3' className={this.state.activeTab==3? 'activeTab' : 'inactiveTab'} onClick={this.onTabClick}>
-                        <p id='3'>Outfit</p>
-                    </div>
+    return (
+        <div className='avatarCreatorEditor'>
+            <div className="settings">
+                <div className={activeTab==1 ? 'activeTab' : 'inactiveTab'} onClick={() => onTabClick(1)}>
+                    {svgBody}
                 </div>
-
-                <div className="content">
-                    {this.state.activeTab==1&&<div className='bodyTypeEditor'>
-                        <img
-                            src={maleModelImg}
-                            id='male'
-                            className={this.state.bodyType=='male' ? 'selectedImg' : 'notSelectedImg'}
-                            onClick={this.setBodyType}
-                        />
-                        <img
-                            src={femaleModelImg}
-                            id='female'
-                            className={this.state.bodyType=='female' ? 'selectedImg' : 'notSelectedImg'}
-                            onClick={this.setBodyType}
-                        />
-                    </div>}
-
-                    {this.state.activeTab==2&&<div className='skinToneEditor'>
-                    skinToneEditor
-                    </div>}
-
-                    {this.state.activeTab==3&&<div className='outfitEditor'>
-                        {this.maleOutfits.display.map((outfit, index) => {
-                            return <img key={index} id={outfit.name} src={outfit.src} className={outfit.type} onClick={this.setOutfit}/>
-                        })}
-                    </div>}
+                <div className={activeTab==2 ? 'activeTab' : 'inactiveTab'} onClick={() => onTabClick(2)}>
+                    {svgFace}
                 </div>
-                                 
+                <div className={activeTab==3 ? 'activeTab' : 'inactiveTab'} onClick={() => onTabClick(3)}>
+                    {svgOutfit}
+                </div>
+            </div>        
+            <div className="content">
+                { activeTab == 1 && <Body /> }
+                { activeTab == 2 && <Face /> }
+                { activeTab == 3 && <Outfit currentScene={props?.currentScene} /> }
             </div>
-        );
-    }
+        </div>
+    );
 }
-
-
 export default AvatarCreatorEditor;
