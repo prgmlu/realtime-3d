@@ -1,0 +1,35 @@
+import React from 'react';
+import check from '../../static/avatar/menus/check.png';
+
+const Outfit = ({ maleOutfits, selectedOutfit, setOutfit }) => {
+	return (
+		<div className="w-full h-full flex flex-col gap-2 overflow-y-auto">
+			<div className="font-sourceSansProSemibold text-xl">Outfit</div>
+			<div className="w-full h-fit gap-2 flex flex-wrap">
+				{maleOutfits.display.map((outfit, index) => (
+					<div className="w-fit h-fit relative">
+						{selectedOutfit === index && (
+							<img
+								className="absolute z-50 w-4 h-4 -top-1 -right-1"
+								src={check}
+								alt="SELECTED"
+							/>
+						)}
+						<img
+							key={index}
+							id={outfit.name}
+							src={outfit.src}
+							className={`w-16 h-24 object-cover bg-white py-1 rounded-md cursor-pointer ${
+								selectedOutfit === index &&
+								'border-2 border-green-500'
+							}`}
+							onClick={(e) => setOutfit(e, index)}
+						/>
+					</div>
+				))}
+			</div>
+		</div>
+	);
+};
+
+export default Outfit;

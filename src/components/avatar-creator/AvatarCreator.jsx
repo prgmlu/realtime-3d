@@ -4,7 +4,7 @@ import { createScene, createRenderer } from '../threeHelpers';
 import Lights from '../Lights';
 import AvatarCreatorEditor from './AvatarCreatorEditor';
 import back from '../static/avatar/menus/back.png';
-import reactCSS from 'reactcss';
+import Cookie from '../cookie';
 
 class AvatarCreator extends Component {
 	constructor(props) {
@@ -28,6 +28,10 @@ class AvatarCreator extends Component {
 		this.saveAvatar = props?.saveAvatar;
 		this.closeModal = props?.closeModal;
 	}
+
+	state = {
+		isCookieShown: false,
+	};
 
 	loadAvatar = () => {
 		this.currentAvatar.position.set(0, -0.9, -2.7);
@@ -140,17 +144,28 @@ class AvatarCreator extends Component {
 		this.renderer.render(this.scene, this.camera);
 	};
 
+	handleClose = () => {
+		this.setState({ isCookieShown: false });
+	};
+
 	render() {
+		const { isCookieShown } = this.state;
 		return (
-			<div className="absolute flex flex-col items-center w-4/5 h-[85%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 py-20 bg-gradient-to-t from-[#bdbdbd]  to-[#7e7d7d] rounded-md">
-				<div
-					onClick={(e) => {
-						this.closeModal();
-					}}
-					className="absolute flex  text-white text-base px-2 py-1 gap-2 rounded-md cursor-pointer z-10 top-3 left-4  bg-black"
-				>
-					<img src={back} alt="Bacl" className="object-contain" />
-					Back
+			<div className="absolute flex flex-col items-center w-4/5 h-[85%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pt-10 pb-24 bg-gradient-to-t from-[#bdbdbd]  to-[#7e7d7d] rounded-md">
+				<div className="absolute z-10 top-3 left-6  flex items-center gap-4">
+					<button
+						onClick={() => this.closeModal()}
+						className="flex items-center text-white text-base px-2 py-1 gap-2 rounded-md cursor-pointer  bg-black"
+					>
+						<img src={back} alt="BACK" className="object-contain" />
+						Back
+					</button>
+					<button
+						onClick={() => this.setState({ isCookieShown: true })}
+						className="text-white underline cursor-pointer text-base"
+					>
+						Cookie Policy
+					</button>
 				</div>
 				<div className="w-full h-full flex items-center">
 					<div
@@ -159,6 +174,7 @@ class AvatarCreator extends Component {
 					></div>
 					<AvatarCreatorEditor currentScene={this.scene} />
 				</div>
+				{isCookieShown && <Cookie handleClose={this.handleClose} />}
 			</div>
 		);
 	}
