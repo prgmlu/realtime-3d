@@ -8,7 +8,7 @@ const ColorTone = ({ title }) => {
 	const [isPickerVisible, setIsPickerVisible] = useState(false);
 
 	return (
-		<div className="flex justify-between items-center py-4">
+		<div className="flex justify-between items-center py-2.5 sm:py-4">
 			<div className="font-sourceSansProSemibold text-xl">{title}</div>
 			<div className="flex">
 				<img

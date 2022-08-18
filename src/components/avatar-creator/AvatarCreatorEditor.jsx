@@ -86,8 +86,8 @@ class AvatarCreatorEditor extends Component {
 	render() {
 		const { selectedOutfit } = this.state;
 		return (
-			<div className="w-1/2 h-full flex flex-col  relative">
-				<div className="w-[70%] h-[12%] flex items-start justify-center gap-3">
+			<div className="w-full sm:w-1/2 h-1/2 sm:h-full flex flex-col items-center justify-between relative">
+				<div className="w-full sm:w-[70%] h-[10%] sm:h-[12%] flex items-start justify-center gap-3">
 					<img
 						src={body}
 						alt="Body type"
@@ -106,7 +106,7 @@ class AvatarCreatorEditor extends Component {
 						id="2"
 						className={`${
 							this.state.activeTab == 2
-								? 'pt-2 pb-4 rounded-t-md'
+								? 'pt-2 pb-5 rounded-t-md'
 								: 'py-2.5 rounded-md'
 						} px-4 rounded-t-md flex justify-center cursor-pointer object-contain bg-[#D9D9D9]`}
 						onClick={this.onTabClick}
@@ -123,7 +123,7 @@ class AvatarCreatorEditor extends Component {
 						onClick={this.onTabClick}
 					/>
 				</div>
-				<div className="w-[70%] h-[88%] bg-[#D9D9D9] rounded-md gap-x-2 overflow-y-auto pt-3 px-3">
+				<div className="w-[96%] sm:w-[70%] h-[87%] sm:h-[86%] bg-[#D9D9D9] rounded-md gap-x-2 pt-3 px-3">
 					{this.state.activeTab == 1 && <BodyShape />}
 					{this.state.activeTab == 2 && <SkinTone />}
 					{this.state.activeTab == 3 && (

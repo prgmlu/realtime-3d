@@ -151,11 +151,15 @@ class AvatarCreator extends Component {
 	render() {
 		const { isCookieShown } = this.state;
 		return (
-			<div className="absolute flex flex-col items-center w-4/5 h-[85%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pt-10 pb-24 bg-gradient-to-t from-[#bdbdbd]  to-[#7e7d7d] rounded-md">
-				<div className="absolute z-10 top-3 left-6  flex items-center gap-4">
+			<div
+				className={`absolute z-[200] flex flex-col items-center justify-center w-[95%] sm:w-4/5 h-[95%] sm:h-[85%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-t from-[#bdbdbd]  to-[#7e7d7d] rounded-md ${
+					isCookieShown && 'bg-white/50'
+				}`}
+			>
+				<div className="absolute w-full sm:w-fit z-10 top-3 left-0 sm:left-4 px-3 sm:px-0 flex justify-between sm:justify-start items-center">
 					<button
 						onClick={() => this.closeModal()}
-						className="flex items-center text-white text-base px-2 py-1 gap-2 rounded-md cursor-pointer  bg-black"
+						className="flex items-center text-white text-base px-2 py-1 gap-2 rounded-md cursor-pointer bg-black mr-0 sm:mr-6"
 					>
 						<img src={back} alt="BACK" className="object-contain" />
 						Back
@@ -167,14 +171,19 @@ class AvatarCreator extends Component {
 						Cookie Policy
 					</button>
 				</div>
-				<div className="w-full h-full flex items-center">
+				<div className="w-full h-full sm:h-3/4 pb-4 flex flex-col sm:flex-row items-center">
 					<div
-						className="w-1/2 flex items-center justify-center"
 						ref={this.myRef}
+						className="w-full sm:w-1/2 h-1/2 sm:h-full flex items-center justify-center scale-75 sm:scale-100"
 					></div>
 					<AvatarCreatorEditor currentScene={this.scene} />
 				</div>
-				{isCookieShown && <Cookie handleClose={this.handleClose} />}
+
+				{isCookieShown && (
+					<div className="fixed sm:absolute inset-0 w-full h-full bg-black/60 sm:bg-transparent">
+						<Cookie handleClose={this.handleClose} />{' '}
+					</div>
+				)}
 			</div>
 		);
 	}

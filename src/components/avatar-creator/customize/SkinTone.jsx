@@ -68,7 +68,7 @@ const SkinTone = () => {
 
 	return (
 		<div className="w-full h-full flex flex-col">
-			<div className="flex flex-col px-2">
+			<div className="w-full h-full flex flex-col px-2">
 				<div className="flex flex-col gap-2">
 					<div className="w-full flex flex-wrap items-center justify-between ">
 						<img
@@ -146,9 +146,9 @@ const SkinTone = () => {
 					</div>
 				</div>
 				<ColorTone title={titles[selectedTone]} />
-				<div className="w-full h-48 flex flex-wrap justify-between gap-y-2 px-1 py-2 overflow-y-auto scrollbar-[4px] scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+				<div className="w-full h-full flex flex-wrap justify-between gap-y-2 px-1 pb-2 sm:my-2 overflow-y-auto scrollbar-[4px] scrollbar-thumb-gray-500 scrollbar-track-gray-200">
 					{dataTones.map((item, index) => (
-						<div className="w-fit h-fit relative">
+						<div key={index} className="w-fit h-fit relative">
 							{selectedStyle === index && (
 								<span className="absolute -top-1 -right-1 w-3 h- object-contain">
 									<img src={check} alt="o" />
