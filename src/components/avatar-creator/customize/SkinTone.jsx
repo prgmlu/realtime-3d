@@ -70,9 +70,9 @@ const SkinTone = () => {
 		<div className="w-full h-full flex flex-col">
 			<div className="w-full h-full flex flex-col px-2">
 				<div className="flex flex-col gap-2">
-					<div className="w-full flex flex-wrap items-center justify-between ">
+					<div className="w-full flex flex-wrap items-center justify-evenly gap-y-2">
 						<img
-							className={`w-[70px] h-8 object-contain rounded px-4 py-2 cursor-pointer shadow-md ${
+							className={`w-24 sm:w-[70px] md:w-[75px] h-8 object-contain rounded px-4 py-2 cursor-pointer shadow-md ${
 								selectedTone === 0
 									? 'bg-white border-[1.5px] border-black'
 									: 'bg-white/50'
@@ -82,7 +82,7 @@ const SkinTone = () => {
 							onClick={() => setSelectedTone(0)}
 						/>
 						<img
-							className={`w-[70px] h-8 object-contain rounded px-4 py-2 cursor-pointer shadow-md ${
+							className={`w-24 sm:w-[70px] md:w-[75px] h-8 object-contain rounded px-4 py-2 cursor-pointer shadow-md ${
 								selectedTone === 1
 									? 'bg-white border-[1.5px] border-black'
 									: 'bg-white/50'
@@ -92,7 +92,7 @@ const SkinTone = () => {
 							onClick={() => setSelectedTone(1)}
 						/>
 						<img
-							className={`w-[70px] h-8 object-contain rounded px-4 py-2 cursor-pointer shadow-md ${
+							className={`w-24 sm:w-[70px] md:w-[75px] h-8 object-contain rounded px-4 py-2 cursor-pointer shadow-md ${
 								selectedTone === 2
 									? 'bg-white border-[1.5px] border-black'
 									: 'bg-white/50'
@@ -102,7 +102,7 @@ const SkinTone = () => {
 							onClick={() => setSelectedTone(2)}
 						/>
 						<img
-							className={`w-[70px] h-8 object-contain rounded px-4 py-2 cursor-pointer shadow-md ${
+							className={`w-24 sm:w-[70px] md:w-[75px h-8 object-contain rounded px-4 py-2 cursor-pointer shadow-md ${
 								selectedTone === 3
 									? 'bg-white border-[1.5px] border-black'
 									: 'bg-white/50'
@@ -112,9 +112,9 @@ const SkinTone = () => {
 							onClick={() => setSelectedTone(3)}
 						/>
 					</div>
-					<div className="w-full flex flex-wrap items-center justify-center gap-x-4">
+					<div className="w-full flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
 						<img
-							className={`w-[70px] h-8 object-contain rounded px-4 py-2 cursor-pointer shadow-md ${
+							className={`w-24 sm:w-[75px] h-8 object-contain rounded px-4 py-2 cursor-pointer shadow-md ${
 								selectedTone === 4
 									? 'bg-white border-[1.5px] border-black'
 									: 'bg-white/50'
@@ -124,7 +124,7 @@ const SkinTone = () => {
 							onClick={() => setSelectedTone(4)}
 						/>
 						<img
-							className={`w-[70px] h-8 object-contain rounded px-4 py-2 cursor-pointer shadow-md ${
+							className={`w-24 sm:w-[75px] h-8 object-contain rounded px-4 py-2 cursor-pointer shadow-md ${
 								selectedTone === 5
 									? 'bg-white border-[1.5px] border-black'
 									: 'bg-white/50'
@@ -134,7 +134,7 @@ const SkinTone = () => {
 							onClick={() => setSelectedTone(5)}
 						/>
 						<img
-							className={`w-[70px] h-8 object-contain rounded px-4 py-2 cursor-pointer shadow-md ${
+							className={`w-24 sm:w-[75px] h-8 object-contain rounded px-4 py-2 cursor-pointer shadow-md ${
 								selectedTone === 6
 									? 'bg-white border-2 border-black'
 									: 'bg-white/50'

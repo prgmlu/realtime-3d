@@ -9,14 +9,14 @@ const BodyShape = () => {
 	return (
 		<div className="flex flex-col gap-2">
 			<div className="font-sourceSansProSemibold text-xl">Body Shape</div>
-			<div className="flex gap-x-4">
+			<div className="flex flex-wrap gap-x-4 gap-y-2">
 				<button
 					onClick={() => setSelectedShape(0)}
 					className={`w-24 shadow-md ${
 						selectedShape === 0
 							? 'bg-white border-[0.25px] border-green-400'
 							: 'bg-white/50'
-					} text-sm font-sourceSansProSemibold rounded px-3 py-1.5 relative`}
+					} text-sm font-sourceSansProSemibold rounded px-2 py-1.5 relative`}
 				>
 					Unspecified
 					{selectedShape === 0 && (
@@ -31,7 +31,7 @@ const BodyShape = () => {
 						selectedShape === 1
 							? 'bg-white border-[0.25px] border-green-400'
 							: 'bg-white/50'
-					} text-sm font-sourceSansProSemibold rounded px-3 py-1.5 relative`}
+					} text-sm font-sourceSansProSemibold rounded px-2 py-1.5 relative`}
 				>
 					Feminine
 					{selectedShape === 1 && (
@@ -46,7 +46,7 @@ const BodyShape = () => {
 						selectedShape === 2
 							? 'bg-white border-[0.25px] border-green-400'
 							: 'bg-white/50'
-					} text-sm font-sourceSansProSemibold rounded px-3 py-1.5 relative`}
+					} text-sm font-sourceSansProSemibold rounded px-2 py-1.5 relative`}
 				>
 					Masculine
 					{selectedShape === 2 && (

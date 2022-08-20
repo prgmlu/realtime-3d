@@ -152,9 +152,9 @@ class AvatarCreator extends Component {
 		const { isCookieShown } = this.state;
 		return (
 			<div
-				className={`absolute z-[200] flex flex-col items-center justify-center w-[95%] sm:w-4/5 h-[95%] sm:h-[85%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-t from-[#bdbdbd]  to-[#7e7d7d] rounded-md ${
+				className={`absolute z-[200] flex flex-col items-center justify-center w-[95%] sm:w-4/5 h-[95%] sm:h-[85%] md:h-[95%] lg:h-[85%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-t from-[#bdbdbd]  to-[#7e7d7d] rounded-md ${
 					isCookieShown && 'bg-white/50'
-				}`}
+				} overflow-hidden`}
 			>
 				<div className="absolute w-full sm:w-fit z-10 top-3 left-0 sm:left-4 px-3 sm:px-0 flex justify-between sm:justify-start items-center">
 					<button
@@ -171,16 +171,16 @@ class AvatarCreator extends Component {
 						Cookie Policy
 					</button>
 				</div>
-				<div className="w-full h-full sm:h-3/4 pb-4 flex flex-col sm:flex-row items-center">
+				<div className="w-full h-full sm:h-3/4 md:h-[80%] lg:h-3/4 py-4 flex flex-col sm:flex-row items-center">
 					<div
 						ref={this.myRef}
-						className="w-full sm:w-1/2 h-1/2 sm:h-full flex items-center justify-center scale-75 sm:scale-100"
+						className="w-full sm:w-1/2 md:w-2/5 h-1/2 sm:h-full flex items-center justify-center scale-75 sm:scale-100 md:scale-150 lg:scale-125"
 					></div>
 					<AvatarCreatorEditor currentScene={this.scene} />
 				</div>
 
 				{isCookieShown && (
-					<div className="fixed sm:absolute inset-0 w-full h-full bg-black/60 sm:bg-transparent">
+					<div className="fixed sm:absolute md:fixed lg:absolute inset-0 w-full h-full bg-black/60 sm:bg-transparent">
 						<Cookie handleClose={this.handleClose} />{' '}
 					</div>
 				)}

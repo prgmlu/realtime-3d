@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import * as THREE from 'three';
-import cloth from '../static/avatar/menus/clothes.png';
-import body from '../static/avatar/menus/body.png';
-import skin from '../static/avatar/menus/skin.png';
+import TabControls from './customize/TabControls';
 import Outfit from './customize/Outfit';
 import SkinTone from './customize/SkinTone';
 import BodyShape from './customize/BodyShape';
@@ -84,46 +82,14 @@ class AvatarCreatorEditor extends Component {
 	// }
 
 	render() {
-		const { selectedOutfit } = this.state;
+		const { selectedOutfit, activeTab } = this.state;
 		return (
-			<div className="w-full sm:w-1/2 h-1/2 sm:h-full flex flex-col items-center justify-between relative">
-				<div className="w-full sm:w-[70%] h-[10%] sm:h-[12%] flex items-start justify-center gap-3">
-					<img
-						src={body}
-						alt="Body type"
-						id="1"
-						className={`${
-							this.state.activeTab == 1
-								? 'pt-2 pb-4 rounded-t-md'
-								: 'py-2 rounded-md'
-						} px-4 rounded-t-md flex justify-center cursor-pointer object-contain bg-[#D9D9D9]`}
-						onClick={this.onTabClick}
-					/>
-
-					<img
-						src={skin}
-						alt="Skin tone"
-						id="2"
-						className={`${
-							this.state.activeTab == 2
-								? 'pt-2 pb-5 rounded-t-md'
-								: 'py-2.5 rounded-md'
-						} px-4 rounded-t-md flex justify-center cursor-pointer object-contain bg-[#D9D9D9]`}
-						onClick={this.onTabClick}
-					/>
-					<img
-						src={cloth}
-						alt="Outfit"
-						id="3"
-						className={`${
-							this.state.activeTab == 3
-								? 'pt-2 pb-4 rounded-t-md'
-								: 'py-2 rounded-md'
-						} px-4 rounded-t-md flex justify-center cursor-pointer object-contain bg-[#D9D9D9]`}
-						onClick={this.onTabClick}
-					/>
-				</div>
-				<div className="w-[96%] sm:w-[70%] h-[87%] sm:h-[86%] bg-[#D9D9D9] rounded-md gap-x-2 pt-3 px-3">
+			<div className="w-full sm:w-1/2 md:w-3/5 lg:w-1/2 h-1/2 sm:h-full flex flex-col items-center justify-between relative">
+				<TabControls
+					activeTab={activeTab}
+					onTabClick={this.onTabClick}
+				/>
+				<div className="w-[96%] sm:w-[70%] md:w-[95%] lg:w-[80%] h-[87%] sm:h-[86%] md:h-[88%] lg:h-[85%] bg-[#D9D9D9] rounded-md gap-x-2 pt-3 px-3">
 					{this.state.activeTab == 1 && <BodyShape />}
 					{this.state.activeTab == 2 && <SkinTone />}
 					{this.state.activeTab == 3 && (
