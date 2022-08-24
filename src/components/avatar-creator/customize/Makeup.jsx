@@ -89,7 +89,7 @@ const Makeup = () => {
 								className={`${
 									selectedTone === 0
 										? 'w-fit h-14'
-										: 'w-[72px] h-9 px-2 py-1'
+										: 'w-[64px] sm:w-[72px] h-9 px-2 py-1'
 								} object-contain rounded  cursor-pointer shadow-md bg-white ${
 									selectedStyle === index &&
 									'border-2 border-[#FF9F9F]'

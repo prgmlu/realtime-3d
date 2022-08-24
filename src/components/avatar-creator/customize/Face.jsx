@@ -86,7 +86,7 @@ const Face = () => {
 							)}
 							<img
 								src={item}
-								className={`w-[72px] h-9 object-contain rounded px-2 py-1 cursor-pointer shadow-md bg-white ${
+								className={`w-[70px] sm:w-[72px] h-9 object-contain rounded px-2 py-1 cursor-pointer shadow-md bg-white ${
 									selectedStyle === index &&
 									'border-2 border-[#FF9F9F]'
 								}`}

@@ -7,10 +7,11 @@ import SkinTone from './SkinTone';
 const BodyShape = () => {
 	const [selectedShape, setSelectedShape] = useState({ x: 0, y: 0 });
 	const [selectedIndex, setSelectedIndex] = useState(0);
-	const [tones, setTones] = useState([
+	const tones = [
 		['#F2D3CE', '#E0B0A6', '#C68D82', '#A36B60', '#7B4B41', '#502E2C'],
 		['#EAC2B9', '#CE9E8F', '#B27F6A', '#8E5D4E', '#643E31'],
-	]);
+		['#F2D3CE', '#E0B0A6', '#C68D82', '#A36B60', '#7B4B41', '#502E2C'],
+	];
 
 	return (
 		<div className="flex flex-col gap-2">
@@ -63,7 +64,7 @@ const BodyShape = () => {
 				</button>
 			</div>
 			<ColorTone title="Skin tone" />
-			<div className="w-full h-36 flex flex-col overflow-y-auto">
+			<div className="w-full h-40 flex flex-col overflow-y-auto">
 				{tones.map((group, index) => (
 					<div
 						key={index}
