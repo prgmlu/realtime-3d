@@ -3,8 +3,9 @@ import * as THREE from 'three';
 import { createScene, createRenderer } from '../threeHelpers';
 import Lights from '../Lights';
 import AvatarCreatorEditor from './AvatarCreatorEditor';
-import back from '../static/avatar/menus/back.png';
 import Cookie from '../cookie';
+import back from '../static/avatar/menus/back.png';
+import close from '../static/avatar/menus/close.png';
 
 class AvatarCreator extends Component {
 	constructor(props) {
@@ -31,6 +32,7 @@ class AvatarCreator extends Component {
 
 	state = {
 		isCookieShown: false,
+		username: '',
 	};
 
 	loadAvatar = () => {
@@ -149,14 +151,20 @@ class AvatarCreator extends Component {
 	};
 
 	render() {
-		const { isCookieShown } = this.state;
+		const { isCookieShown, username } = this.state;
 		return (
 			<div
-				className={`absolute z-[200] flex flex-col items-center justify-center w-[95%] sm:w-4/5 h-[95%] sm:h-[85%] md:h-[95%] lg:h-[85%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-t from-[#bdbdbd]  to-[#7e7d7d] rounded-md ${
+				className={`absolute z-[200] flex flex-col items-center justify-center w-[95%] sm:w-4/5 h-[95%] sm:h-[85%] md:h-[95%] lg:h-[85%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-b from-[#7c6a6a] via-[#c1b8b8] to-[#FFF2F2] rounded-md ${
 					isCookieShown && 'bg-white/50'
 				} overflow-hidden`}
 			>
-				<div className="absolute w-full sm:w-fit z-10 top-3 left-0 sm:left-4 px-3 sm:px-0 flex justify-between sm:justify-start items-center">
+				<img
+					className="w-7 h-7 absolute -top-2.5 -right-1.5 cursor-pointer z-[600]"
+					src={close}
+					alt="CLOSE"
+					onClick={() => this.closeModal()}
+				/>
+				{/* <div className="absolute w-full sm:w-fit z-10 top-3 left-0 sm:left-4 px-3 sm:px-0 flex justify-between sm:justify-start items-center">
 					<button
 						onClick={() => this.closeModal()}
 						className="flex items-center text-white text-base px-2 py-1 gap-2 rounded-md cursor-pointer bg-black mr-0 sm:mr-6"
@@ -170,14 +178,32 @@ class AvatarCreator extends Component {
 					>
 						Cookie Policy
 					</button>
-				</div>
-				<div className="w-full h-full sm:h-3/4 md:h-[80%] lg:h-3/4 py-4 flex flex-col sm:flex-row items-center">
-					<div
-						ref={this.myRef}
-						className="w-full sm:w-1/2 md:w-2/5 h-1/2 sm:h-full flex items-center justify-center scale-75 sm:scale-100 md:scale-150 lg:scale-125"
-					></div>
+				</div> */}
+				<div className="w-full h-full sm:h-3/4 md:h-[90%]  lg:h-3/4 flex flex-col sm:flex-row items-center">
+					<div className="w-full sm:w-1/2 md:w-2/5 lg:w-1/2 h-1/2 sm:h-full flex flex-col items-center">
+						<input
+							className="w-32 z-50 outline-none text-center text-white text-base rounded px-6 py-1 border-[1px] border-[#330D0D] bg-[#330d0d4d]"
+							placeholder="Username"
+							value={username}
+							onChange={({ target }) =>
+								this.setState({ username: target.value })
+							}
+						/>
+						<div
+							ref={this.myRef}
+							className="scale-75 sm:scale-100 md:scale-150 lg:scale-125"
+						></div>
+					</div>
+
 					<AvatarCreatorEditor currentScene={this.scene} />
 				</div>
+
+				<button
+					onClick={() => this.setState({ isCookieShown: true })}
+					className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[#330D0D] text-base underline underline-offset-2 cursor-pointer"
+				>
+					Cookie Policy
+				</button>
 
 				{isCookieShown && (
 					<div className="fixed sm:absolute md:fixed lg:absolute inset-0 w-full h-full bg-black/60 sm:bg-transparent">

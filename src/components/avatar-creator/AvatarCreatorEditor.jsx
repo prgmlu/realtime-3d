@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import * as THREE from 'three';
 import TabControls from './customize/TabControls';
 import Outfit from './customize/Outfit';
-import SkinTone from './customize/SkinTone';
+import Face from './customize/Face';
 import BodyShape from './customize/BodyShape';
+import Makeup from './customize/Makeup';
 
 function importImgsFolder(r) {
 	let images = [];
@@ -46,8 +47,8 @@ class AvatarCreatorEditor extends Component {
 		selectedOutfit: -1,
 	};
 
-	onTabClick = (e) => {
-		this.setState({ activeTab: e.target.id });
+	onTabClick = (id) => {
+		this.setState({ activeTab: id });
 	};
 
 	setBodyType = (e) => {
@@ -84,21 +85,27 @@ class AvatarCreatorEditor extends Component {
 	render() {
 		const { selectedOutfit, activeTab } = this.state;
 		return (
-			<div className="w-full sm:w-1/2 md:w-3/5 lg:w-1/2 h-1/2 sm:h-full flex flex-col items-center justify-between relative">
+			<div className="w-full sm:w-1/2 md:w-2/5 lg:w-[45%] h-1/2 sm:h-full flex flex-col relative">
 				<TabControls
 					activeTab={activeTab}
 					onTabClick={this.onTabClick}
 				/>
-				<div className="w-[96%] sm:w-[70%] md:w-[95%] lg:w-[80%] h-[87%] sm:h-[86%] md:h-[88%] lg:h-[85%] bg-[#D9D9D9] rounded-md gap-x-2 pt-3 px-3">
-					{this.state.activeTab == 1 && <BodyShape />}
-					{this.state.activeTab == 2 && <SkinTone />}
-					{this.state.activeTab == 3 && (
+				<div className="w-[96%] sm:w-[70%] md:w-[80%] h-[87%] sm:h-[86%] md:h-[88%] lg:h-[80%] bg-white rounded-lg gap-x-2 pt-3 px-3">
+					{activeTab == 1 && <BodyShape />}
+					{activeTab == 2 && <Face />}
+					{activeTab == 3 && <Makeup />}
+					{activeTab == 4 && (
 						<Outfit
 							selectedOutfit={selectedOutfit}
 							maleOutfits={this.maleOutfits}
 							setOutfit={this.setOutfit}
 						/>
 					)}
+				</div>
+				<div className="w-[96%] sm:w-[70%] md:w-[80%] flex justify-center items-center py-3">
+					<button className="w-fit h-fit self-center text-[#330D0D] px-7 py-0.5 text-sm border-[1px] border-[#330D0D] rounded-md">
+						Save
+					</button>
 				</div>
 			</div>
 		);
