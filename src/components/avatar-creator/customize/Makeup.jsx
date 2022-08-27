@@ -39,7 +39,7 @@ const Makeup = () => {
 	};
 
 	return (
-		<div className="w-full h-full flex flex-col">
+		<div className="w-full h-full flex flex-col gap-1 scrollbar">
 			<div className="w-full h-full flex flex-col px-2">
 				<div className="flex flex-col gap-2">
 					<div className="w-full flex flex-wrap items-center justify-between">
@@ -76,7 +76,7 @@ const Makeup = () => {
 					</div>
 				</div>
 				<ColorTone title={titles[selectedTone]} />
-				<div className="w-full h-full flex flex-wrap justify-between gap-y-1 px-1 pb-2 sm:my-2 overflow-y-auto scrollbar-[2px] scrollbar-thumb-gray-500 scrollbar-track-gray-200">
+				<div className="w-full h-full flex flex-wrap justify-between gap-y-1 px-1 pb-2 sm:my-2">
 					{dataTones.map((item, index) => (
 						<div key={index} className="w-fit h-fit relative p-1">
 							{selectedStyle === index && (

@@ -1,7 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
 import check from '../../static/avatar/menus/check.png';
-import ColorTone from '../ColorTone';
 import SkinTone from './SkinTone';
 
 const BodyShape = () => {
@@ -11,12 +10,17 @@ const BodyShape = () => {
 		['#F2D3CE', '#E0B0A6', '#C68D82', '#A36B60', '#7B4B41', '#502E2C'],
 		['#EAC2B9', '#CE9E8F', '#B27F6A', '#8E5D4E', '#643E31'],
 		['#F2D3CE', '#E0B0A6', '#C68D82', '#A36B60', '#7B4B41', '#502E2C'],
+		['#EAC2B9', '#CE9E8F', '#B27F6A', '#8E5D4E', '#643E31'],
+		['#F2D3CE', '#E0B0A6', '#C68D82', '#A36B60', '#7B4B41', '#502E2C'],
+		['#EAC2B9', '#CE9E8F', '#B27F6A', '#8E5D4E', '#643E31'],
 	];
 
 	return (
-		<div className="flex flex-col gap-2">
-			<div className="font-sourceSansProSemibold text-lg">Body Shape</div>
-			<div className="flex flex-wrap gap-x-4 gap-y-2">
+		<div className="w-full h-full flex flex-col scrollbar">
+			<div className="h-[10%] font-sourceSansProSemibold text-lg">
+				Body Shape
+			</div>
+			<div className="h-[10%] flex flex-wrap gap-x-4 gap-y-2">
 				<button
 					onClick={() => setSelectedShape(1)}
 					className={`w-24 shadow-md ${
@@ -63,25 +67,29 @@ const BodyShape = () => {
 					)}
 				</button>
 			</div>
-			<ColorTone title="Skin tone" />
-			<div className="w-full h-40 flex flex-col overflow-y-auto">
-				{tones.map((group, index) => (
-					<div
-						key={index}
-						className="flex flex-wrap justify-center items-center gap-2.5"
-					>
-						{group.map((t, idx) => (
-							<SkinTone
-								key={idx}
-								color={t}
-								x={index}
-								y={idx}
-								selectedIndex={selectedIndex}
-								setSelectedIndex={setSelectedIndex}
-							/>
-						))}
-					</div>
-				))}
+			<div className="h-[80%] flex flex-col gap-1.5 pt-2">
+				<div className="font-sourceSansProSemibold text-lg">
+					Skin tone
+				</div>
+				<div className="w-full h-full flex flex-col">
+					{tones.map((group, index) => (
+						<div
+							key={index}
+							className="flex flex-wrap justify-center items-center gap-2.5"
+						>
+							{group.map((t, idx) => (
+								<SkinTone
+									key={idx}
+									color={t}
+									x={index}
+									y={idx}
+									selectedIndex={selectedIndex}
+									setSelectedIndex={setSelectedIndex}
+								/>
+							))}
+						</div>
+					))}
+				</div>
 			</div>
 		</div>
 	);

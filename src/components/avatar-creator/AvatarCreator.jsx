@@ -3,7 +3,6 @@ import * as THREE from 'three';
 import { createScene, createRenderer } from '../threeHelpers';
 import Lights from '../Lights';
 import AvatarCreatorEditor from './AvatarCreatorEditor';
-import Cookie from '../cookie';
 import back from '../static/avatar/menus/back.png';
 import close from '../static/avatar/menus/close.png';
 import { MobileOnlyView } from 'react-device-detect';
@@ -32,7 +31,6 @@ class AvatarCreator extends Component {
 	}
 
 	state = {
-		isCookieShown: false,
 		username: '',
 	};
 
@@ -147,15 +145,11 @@ class AvatarCreator extends Component {
 		this.renderer.render(this.scene, this.camera);
 	};
 
-	handleClose = () => {
-		this.setState({ isCookieShown: false });
-	};
-
 	render() {
 		const { isCookieShown, username } = this.state;
 		return (
 			<div
-				className={`flex flex-col items-center justify-center w-[95%] sm:w-4/5 h-[95%] sm:h-[85%] md:h-[95%] lg:h-[85%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-b from-[#7c6a6a] via-[#c1b8b8] to-[#FFF2F2] rounded-md ${
+				className={`z-40 flex flex-col items-center justify-center w-[95%] sm:w-4/5 h-[95%] sm:h-[85%] md:h-[95%] lg:h-[85%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-b from-[#7c6a6a] via-[#c1b8b8] to-[#FFF2F2] rounded-md ${
 					isCookieShown && 'bg-white/50'
 				} overflow-hidden absolute z-0`}
 			>
@@ -196,28 +190,6 @@ class AvatarCreator extends Component {
 					</div>
 					<AvatarCreatorEditor currentScene={this.scene} />
 				</div>
-
-				{MobileOnlyView ? (
-					<button
-						onClick={() => this.setState({ isCookieShown: true })}
-						className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[#330D0D] text-base underline underline-offset-2 cursor-pointer"
-					>
-						Cookie Policy
-					</button>
-				) : (
-					<button
-						onClick={() => this.setState({ isCookieShown: true })}
-						className="absolute left-4 top-[45%] -translate-y-1/2 font-bold text-[#330D0D] text-base underline underline-offset-2 cursor-pointer"
-					>
-						Cookie Policy
-					</button>
-				)}
-
-				{isCookieShown && (
-					<div className="fixed sm:absolute md:fixed lg:absolute inset-0 w-full h-full bg-black/60 sm:bg-transparent">
-						<Cookie handleClose={this.handleClose} />{' '}
-					</div>
-				)}
 			</div>
 		);
 	}

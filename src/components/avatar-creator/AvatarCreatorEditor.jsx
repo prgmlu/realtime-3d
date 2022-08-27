@@ -91,7 +91,7 @@ class AvatarCreatorEditor extends Component {
 					activeTab={activeTab}
 					onTabClick={this.onTabClick}
 				/>
-				<div className="w-[96%] sm:w-[70%] md:w-[80%] h-[87%] sm:h-[86%] md:h-[88%] lg:h-[80%] bg-white rounded-lg gap-x-2 pt-3 px-3">
+				<div className="w-[96%] sm:w-[70%] md:w-[80%] h-[87%] sm:h-[86%] md:h-[88%] lg:h-[80%] bg-white rounded-lg gap-x-2 pt-3 px-3 relative">
 					{activeTab == 1 && <BodyShape />}
 					{activeTab == 2 && <Face />}
 					{activeTab == 3 && <Makeup />}
@@ -102,6 +102,8 @@ class AvatarCreatorEditor extends Component {
 							setOutfit={this.setOutfit}
 						/>
 					)}
+
+					<div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-full h-[5%] shadow-lg bg-gradient-to-b from-black/10  to-white/70"></div>
 				</div>
 				{!MobileOnlyView && (
 					<div className="w-[96%] sm:w-[70%] md:w-[80%] flex justify-center items-center py-3">
