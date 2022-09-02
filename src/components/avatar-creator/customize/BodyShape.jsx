@@ -1,11 +1,13 @@
 import React from 'react';
 import { useState } from 'react';
-import check from '../../static/avatar/menus/check.png';
 import SkinTone from './SkinTone';
+import check from '../../static/avatar/menus/check.png';
+import menShape from '../../static/avatar/demo/bodyshape/men.png';
+import womenShape from '../../static/avatar/demo/bodyshape/women.png';
 
 const BodyShape = () => {
-	const [selectedShape, setSelectedShape] = useState({ x: 0, y: 0 });
-	const [selectedIndex, setSelectedIndex] = useState(0);
+	const [selectedShape, setSelectedShape] = useState(1);
+	const [selectedIndex, setSelectedIndex] = useState({ x: -1, y: -1 });
 	const tones = [
 		['#F2D3CE', '#E0B0A6', '#C68D82', '#A36B60', '#7B4B41', '#502E2C'],
 		['#EAC2B9', '#CE9E8F', '#B27F6A', '#8E5D4E', '#643E31'],
@@ -20,8 +22,47 @@ const BodyShape = () => {
 			<div className="h-[10%] font-sourceSansProSemibold text-lg">
 				Body Shape
 			</div>
-			<div className="h-[10%] flex flex-wrap gap-x-4 gap-y-2">
-				<button
+			<div className="h-fit flex flex-wrap gap-x-4 gap-y-2 py-1">
+				<div className="w-fit h-fit relative">
+					{selectedShape === 0 && (
+						<img
+							className="absolute z-50 w-4 h-4 -top-1 -right-1"
+							src={check}
+							alt="SELECTED"
+						/>
+					)}
+					<img
+						onClick={() => setSelectedShape(0)}
+						src={womenShape}
+						alt=""
+						className={`${
+							selectedShape === 0
+								? 'bg-white border-[0.25px] border-[#FF9F9F]'
+								: 'bg-white/50 border-gray-100'
+						} shadow-md bg-white py-1 rounded-md cursor-pointer px-2.5 border-[0.5px] `}
+					/>
+				</div>
+				<div className="w-fit h-fit relative">
+					{selectedShape === 1 && (
+						<img
+							className="absolute z-50 w-4 h-4 -top-1 -right-1"
+							src={check}
+							alt="SELECTED"
+						/>
+					)}
+					<img
+						onClick={() => setSelectedShape(1)}
+						src={menShape}
+						alt=""
+						className={`${
+							selectedShape === 1
+								? 'bg-white border-[0.25px] border-[#FF9F9F]'
+								: 'bg-white/50 border-gray-100'
+						} shadow-md bg-white py-1 rounded-md cursor-pointer px-2.5 border-[0.5px]`}
+					/>
+				</div>
+
+				{/* <button
 					onClick={() => setSelectedShape(1)}
 					className={`w-24 shadow-md ${
 						selectedShape === 1
@@ -65,9 +106,9 @@ const BodyShape = () => {
 							<img src={check} alt="o" />
 						</span>
 					)}
-				</button>
+				</button> */}
 			</div>
-			<div className="h-[80%] flex flex-col gap-1.5 pt-2">
+			<div className="h-fit flex flex-col gap-1.5 pt-2">
 				<div className="font-sourceSansProSemibold text-lg">
 					Skin tone
 				</div>

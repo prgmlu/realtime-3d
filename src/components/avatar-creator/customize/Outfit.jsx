@@ -1,7 +1,53 @@
-import React from 'react';
+import React, { useState } from 'react';
 import check from '../../static/avatar/menus/check.png';
 
-const Outfit = ({ maleOutfits, selectedOutfit, setOutfit }) => {
+const Outfit = ({ currentScene }) => {
+	const [selectedOutfit, setSelectedOutfit] = useState(-1);
+
+	const importImgsFolder = (r) => {
+		let images = [];
+		r.keys().map((item) => {
+			images.push({
+				type: item.split('./')[1].split('_')[0],
+				name: item.split('./')[1].split('.')[0],
+				src: r(item).default,
+			});
+		});
+		return images;
+	};
+
+	const maleOutfits = {
+		textures: importImgsFolder(
+			require.context(
+				'../../static/avatar/outfit/male/textures',
+				false,
+				/\.(png)$/,
+			),
+		),
+		display: importImgsFolder(
+			require.context(
+				'../../static/avatar/outfit/male/display',
+				false,
+				/\.(png)$/,
+			),
+		),
+	};
+
+	const setOutfit = (e, index) => {
+		setSelectedOutfit(index);
+
+		let selectedItem = maleOutfits.textures.filter((texture) => {
+			return texture.name == e.target.id;
+		})[0];
+		let selectedTexture = textureLoader.load(selectedItem.src);
+		currentScene.children[0].children[0].getObjectByName(
+			e.target.className,
+		).material.map = selectedTexture;
+		currentScene.children[0].children[0].getObjectByName(
+			e.target.className,
+		).material.needsUpdate = true;
+	};
+
 	return (
 		<div className="w-full h-full flex flex-col gap-1 scrollbar">
 			<div className="font-sourceSansProSemibold text-lg">Outfit</div>

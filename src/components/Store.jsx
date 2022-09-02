@@ -16,6 +16,7 @@ import SceneModal from './SceneModal';
 import CartModal from './ui/CartModal';
 import defaultChar from './static/glb_files/mixamoriggedopaque.glb';
 import Cookie from './cookie';
+import close from './static/avatar/menus/close.png';
 
 const USE_NEW_STORE_WALLS = false;
 
@@ -62,6 +63,7 @@ export default class Store extends Component {
 		cartItems: [],
 		itemNum: 1,
 		isCookieShown: false,
+		isWindowSize: false,
 	};
 
 	loadAvatar = (avatar) => {
@@ -169,6 +171,12 @@ export default class Store extends Component {
 	setCartModal = () => {
 		let showCartModal = !this.state.cartModal;
 		this.setState({ cartModal: showCartModal });
+	};
+
+	updateWindowSize = (value) => {
+		this.setState({
+			isWindowSize: value,
+		});
 	};
 
 	componentDidMount() {
@@ -299,7 +307,7 @@ export default class Store extends Component {
 	}
 
 	render() {
-		const { isCookieShown } = this.state;
+		const { isCookieShown, avatarCreator, isWindowSize } = this.state;
 		return (
 			<div className="w-screen h-screen overflow-hidden relative">
 				<canvas id="webgl"></canvas>
@@ -313,11 +321,12 @@ export default class Store extends Component {
 				)}
 
 				<AvatarButton showModal={this.showAvatarCreator} />
-				{this.state.avatarCreator && (
+				{avatarCreator && (
 					<AvatarCreator
 						saveAvatar={this.saveAvatar}
 						closeModal={this.closeAvatarCreator}
 						currentAvatar={this.state.avatar}
+						updateWindowSize={this.updateWindowSize}
 					/>
 				)}
 
@@ -333,12 +342,27 @@ export default class Store extends Component {
 					/>
 				)}
 
-				<button
-					onClick={() => this.setState({ isCookieShown: true })}
-					className="z-50 absolute left-4 bottom-[55%] -translate-y-1/2  sm:bottom-12 sm:left-1/2 sm:-translate-x-1/2 font-bold text-[#330D0D] text-base underline underline-offset-2 cursor-pointer"
-				>
-					Cookie Policy
-				</button>
+				{isWindowSize && avatarCreator && (
+					<img
+						className="w-6 h-6 cursor-pointer absolute top-[6%] right-[9.25%] z-50"
+						src={close}
+						alt="CLOSE"
+						onClick={() => this.closeAvatarCreator()}
+					/>
+				)}
+				{isWindowSize && avatarCreator && (
+					<button className="absolute z-50 bottom-[15%] right-[32%] text-center text-[#330D0D] text-xs px-4 py-1 gap-2 rounded-md font-semibold cursor-pointer bg-white border-[1px] border-[#836C6C]">
+						Save
+					</button>
+				)}
+				{avatarCreator && (
+					<button
+						onClick={() => this.setState({ isCookieShown: true })}
+						className="z-50 absolute left-4 bottom-[55%] -translate-y-1/2  sm:bottom-12 sm:left-1/2 sm:-translate-x-1/2 font-bold text-[#330D0D] text-base underline underline-offset-2 cursor-pointer"
+					>
+						Cookie Policy
+					</button>
+				)}
 
 				{isCookieShown && (
 					<div className="fixed sm:absolute md:fixed lg:absolute inset-0 w-full h-full bg-black/60 sm:bg-transparent">

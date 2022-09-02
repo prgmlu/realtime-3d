@@ -5,9 +5,12 @@ import hair from '../../static/avatar/menus/hair_long.png';
 import eyelash from '../../static/avatar/menus/eyelash.png';
 import eye from '../../static/avatar/menus/eye.png';
 import check from '../../static/avatar/menus/check.png';
-import d_hair from '../../static/avatar/demo/demo_hair.png';
 import d_eyelash from '../../static/avatar/demo/demo_eyelashes.png';
 import d_eye from '../../static/avatar/demo/demo_eyes.png';
+import d_hair1 from '../../static/avatar/demo/hair/menhair1.png';
+import d_hair2 from '../../static/avatar/demo/hair/menhair2.png';
+import d_hair3 from '../../static/avatar/demo/hair/menhair3.png';
+import d_hair4 from '../../static/avatar/demo/hair/menhair4.png';
 
 const Face = () => {
 	const [selectedStyle, setSelectedStyle] = useState(0);
@@ -22,19 +25,19 @@ const Face = () => {
 
 	const getContents = (index) => {
 		let temp = [];
-		for (let i = 0; i < demo_items_count; i++) {
-			switch (index) {
-				case 0:
-					temp.push(d_hair);
-					break;
-				case 1:
-					temp.push(d_eyelash);
-					break;
-				case 2:
-					temp.push(d_eye);
-					break;
-			}
+
+		switch (index) {
+			case 0:
+				temp = [d_hair1, d_hair2, d_hair3, d_hair4];
+				break;
+			case 1:
+				for (let i = 0; i < demo_items_count; i++) temp.push(d_eyelash);
+				break;
+			case 2:
+				for (let i = 0; i < demo_items_count; i++) temp.push(d_eye);
+				break;
 		}
+
 		setDataTones([...temp]);
 	};
 
