@@ -42,9 +42,9 @@ const Face = () => {
 	};
 
 	return (
-		<div className="w-full h-full flex flex-col px-2 gap-1 scrollbar">
-			<div className="flex flex-col gap-2">
-				<div className="w-full flex flex-wrap items-center justify-between">
+		<div className="w-full h-full flex flex-col px-2 gap-2">
+			<div className="h-fit flex flex-col">
+				<div className="w-full h-fit flex flex-wrap items-center justify-between">
 					<img
 						className={`w-24 sm:w-[70px] md:w-[27%] h-9 object-contain rounded px-4 py-2 cursor-pointer shadow-md ${
 							selectedTone === 0
@@ -76,9 +76,9 @@ const Face = () => {
 						onClick={() => setSelectedTone(2)}
 					/>
 				</div>
+				<ColorTone title={titles[selectedTone]} />
 			</div>
-			<ColorTone title={titles[selectedTone]} />
-			<div className="w-full h-full flex flex-wrap gap-1.5 px-1 pb-2">
+			<div className="w-full h-[80%] flex flex-wrap gap-1.5 pr-2.5 pb-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
 				{dataTones.map((item, index) => (
 					<div key={index} className="w-fit h-fit relative p-1">
 						{selectedStyle === index && (

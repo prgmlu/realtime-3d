@@ -351,7 +351,7 @@ export default class Store extends Component {
 					/>
 				)}
 				{isWindowSize && avatarCreator && (
-					<button className="absolute z-50 bottom-[15%] right-[32%] text-center text-[#330D0D] text-xs px-4 py-1 gap-2 rounded-md font-semibold cursor-pointer bg-white border-[1px] border-[#836C6C]">
+					<button className="absolute z-50 bottom-[10%] right-[32%] text-center text-[#330D0D] text-xs px-4 py-1 gap-2 rounded-md font-semibold cursor-pointer bg-white border-[1px] border-[#836C6C]">
 						Save
 					</button>
 				)}

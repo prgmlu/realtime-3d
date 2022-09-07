@@ -23,13 +23,11 @@ const AvatarCreatorEditor = ({
 	return (
 		<div className="w-full sm:w-1/2 md:w-2/5 lg:w-[45%] h-1/2 sm:h-full flex flex-col justify-between sm:justify-start items-center sm:items-start relative">
 			<TabControls activeTab={activeTab} onTabClick={setActiveTab} />
-			<div className="w-[96%] sm:w-[70%] md:w-[80%] h-[87%] sm:h-[86%] md:h-[88%] lg:h-[80%] bg-white rounded-lg gap-x-2 pt-3 px-3 relative">
+			<div className="w-[96%] sm:w-[70%] md:w-[80%] h-[70%] sm:h-[86%] md:h-[88%] lg:h-[80%] bg-white rounded-lg gap-x-2 pt-3 px-3 relative">
 				{activeTab == 1 && <BodyShape />}
 				{activeTab == 2 && <Face />}
 				{activeTab == 3 && <Makeup />}
 				{activeTab == 4 && <Outfit currentScene={currentScene} />}
-
-				<div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-full h-[5%] shadow-lg bg-gradient-to-b from-black/10  to-white/70"></div>
 			</div>
 			{width <= 480 && (
 				<div className="w-[96%] sm:w-[70%] md:w-[80%] flex justify-center items-center py-3">

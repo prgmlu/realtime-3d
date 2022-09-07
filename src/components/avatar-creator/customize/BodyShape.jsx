@@ -2,8 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import SkinTone from './SkinTone';
 import check from '../../static/avatar/menus/check.png';
-import menShape from '../../static/avatar/demo/bodyshape/men.png';
-import womenShape from '../../static/avatar/demo/bodyshape/women.png';
+import ColorTone from '../ColorTone';
 
 const BodyShape = () => {
 	const [selectedShape, setSelectedShape] = useState(1);
@@ -18,51 +17,12 @@ const BodyShape = () => {
 	];
 
 	return (
-		<div className="w-full h-full flex flex-col scrollbar">
+		<div className="w-full h-full flex flex-col gap-1">
 			<div className="h-[10%] font-sourceSansProSemibold text-lg">
 				Body Shape
 			</div>
 			<div className="h-fit flex flex-wrap gap-x-4 gap-y-2 py-1">
-				<div className="w-fit h-fit relative">
-					{selectedShape === 0 && (
-						<img
-							className="absolute z-50 w-4 h-4 -top-1 -right-1"
-							src={check}
-							alt="SELECTED"
-						/>
-					)}
-					<img
-						onClick={() => setSelectedShape(0)}
-						src={womenShape}
-						alt=""
-						className={`${
-							selectedShape === 0
-								? 'bg-white border-[0.25px] border-[#FF9F9F]'
-								: 'bg-white/50 border-gray-100'
-						} shadow-md bg-white py-1 rounded-md cursor-pointer px-2.5 border-[0.5px] `}
-					/>
-				</div>
-				<div className="w-fit h-fit relative">
-					{selectedShape === 1 && (
-						<img
-							className="absolute z-50 w-4 h-4 -top-1 -right-1"
-							src={check}
-							alt="SELECTED"
-						/>
-					)}
-					<img
-						onClick={() => setSelectedShape(1)}
-						src={menShape}
-						alt=""
-						className={`${
-							selectedShape === 1
-								? 'bg-white border-[0.25px] border-[#FF9F9F]'
-								: 'bg-white/50 border-gray-100'
-						} shadow-md bg-white py-1 rounded-md cursor-pointer px-2.5 border-[0.5px]`}
-					/>
-				</div>
-
-				{/* <button
+				<button
 					onClick={() => setSelectedShape(1)}
 					className={`w-24 shadow-md ${
 						selectedShape === 1
@@ -106,13 +66,11 @@ const BodyShape = () => {
 							<img src={check} alt="o" />
 						</span>
 					)}
-				</button> */}
+				</button>
 			</div>
-			<div className="h-fit flex flex-col gap-1.5 pt-2">
-				<div className="font-sourceSansProSemibold text-lg">
-					Skin tone
-				</div>
-				<div className="w-full h-full flex flex-col">
+			<div className="h-[70%] sm:h-[80%] flex flex-col justify-between pb-2">
+				<ColorTone title="Skin tone" />
+				<div className="w-full h-[80%] flex flex-col overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
 					{tones.map((group, index) => (
 						<div
 							key={index}

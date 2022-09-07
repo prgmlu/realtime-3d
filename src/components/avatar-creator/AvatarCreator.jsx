@@ -4,7 +4,6 @@ import { createScene, createRenderer } from '../threeHelpers';
 import Lights from '../Lights';
 import AvatarCreatorEditor from './AvatarCreatorEditor';
 import back from '../static/avatar/menus/back.png';
-import edit from '../static/avatar/menus/edit.png';
 
 class AvatarCreator extends Component {
 	constructor(props) {
@@ -178,21 +177,16 @@ class AvatarCreator extends Component {
 						</button>
 					</div>
 				)}
-				<div className="w-full h-full sm:h-3/4 md:h-[90%]  lg:h-3/4 flex flex-col sm:flex-row items-center">
+				<div className="w-full h-full sm:h-3/4 md:h-[90%] flex flex-col sm:flex-row items-center">
 					<div className="w-full sm:w-1/2 md:w-2/5 lg:w-1/2 h-1/2 sm:h-full flex flex-col items-center justify-start sm:justify-center">
-						<div className="w-32 h-8 z-50 flex items-end justify-center mt-3 sm:mt-0">
-							<div className="w-[25%] h-full flex items-center justify-center rounded-l-[4px] border-t-[1px] border-l-[1px] border-b-[1px] border-[#330D0D] bg-black">
-								<img className="scale-90" src={edit} alt="" />
-							</div>
-							<input
-								className="w-[75%] h-full outline-none text-center text-white text-sm rounded-r-[4px] px-1 py-1 mt-[11px] sm:mt-0 border-t-[1px] border-r-[1px] border-b-[1px] border-[#330D0D] bg-[#330d0d4d]"
-								placeholder="Username"
-								value={username}
-								onChange={({ target }) =>
-									this.setState({ username: target.value })
-								}
-							/>
-						</div>
+						<input
+							className="w-32 h-8 z-50 outline-none text-center text-white text-sm rounded-[4px] px-1 py-1 mt-[11px] sm:mt-0 border-[1px]  border-[#330D0D] bg-[#330d0d4d]"
+							placeholder="Username"
+							value={username}
+							onChange={({ target }) =>
+								this.setState({ username: target.value })
+							}
+						/>
 						<div
 							ref={this.myRef}
 							className="scale-75 sm:scale-100 md:scale-150 lg:scale-125"
